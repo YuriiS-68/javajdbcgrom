@@ -1,7 +1,6 @@
 package jdbc_dz;
 
 import java.sql.*;
-import java.util.Arrays;
 
 public class Solution {
     private static final String DB_URL = "jdbc:oracle:thin:@gromcode-lesson.cjqbbseqr63c.eu-central-1.rds.amazonaws.com:1521:ORCL";

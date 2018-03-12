@@ -1,3 +1,5 @@
+package lesson1and2;
+
 import java.sql.*;
 
 public class JDBCFirstStep {
