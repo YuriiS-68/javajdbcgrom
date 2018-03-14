@@ -47,12 +47,12 @@ public class Solution {
         long startTime = System.currentTimeMillis();
 
         try(Connection connection = getConnection();
-            Statement statement = connection.createStatement()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM TEST_SPEED WHERE ID = ?")) {
 
             int count = 0;
             for (int i = 1; i < 1001; i++) {
-
-                int response = statement.executeUpdate("DELETE FROM TEST_SPEED WHERE ID = " + i + "");
+                preparedStatement.setInt(1, i);
+                int response = preparedStatement.executeUpdate();
                 count += response;
             }
 
@@ -92,10 +92,11 @@ public class Solution {
         long startTime = System.currentTimeMillis();
 
         try(Connection connection = getConnection();
-            Statement statement = connection.createStatement()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM TEST_SPEED WHERE ID = ?")) {
 
             for (int i = 1; i < 1001; i++) {
-                ResultSet resultSet = statement.executeQuery("SELECT * FROM TEST_SPEED WHERE ID = " + i + "");
+                preparedStatement.setInt(1, i);
+                ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()){
                     TestSpeed testSpeed = new TestSpeed(resultSet.getLong(1), resultSet.getString(2),
                             resultSet.getInt(3));
