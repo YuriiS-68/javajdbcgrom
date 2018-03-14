@@ -1,8 +1,6 @@
 package jdbc_dz_lesson3_part3;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Solution {
     //Все методы должны замерять скорость операции в миллисекундах и возвращать полученное значение
@@ -15,8 +13,8 @@ public class Solution {
         //добавлять 1000 записей в таблицу с произвольными значениями
         long startTime = System.currentTimeMillis();
 
-        try(Connection connection = getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO TEST_SPEED VALUES(?, ?, ?)");
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO TEST_SPEED VALUES(?, ?, ?)")){
 
             int count = 0;
             for (int i = 1; i < 1001; i++) {
@@ -48,9 +46,8 @@ public class Solution {
         //удалять 1000 добавленных записей отдельными запросами по полю ID
         long startTime = System.currentTimeMillis();
 
-        try(Connection connection = getConnection()) {
-
-            Statement statement = connection.createStatement();
+        try(Connection connection = getConnection();
+            Statement statement = connection.createStatement()) {
 
             int count = 0;
             for (int i = 1; i < 1001; i++) {
@@ -74,9 +71,8 @@ public class Solution {
         //удалять 1000 записей одним запросом по полю ID
         long startTime = System.currentTimeMillis();
 
-        try(Connection connection = getConnection()) {
-
-            Statement statement = connection.createStatement();
+        try(Connection connection = getConnection();
+            Statement statement = connection.createStatement()) {
 
             int response = statement.executeUpdate("DELETE FROM TEST_SPEED WHERE ID >= 1 AND ID <= 1000");
 
@@ -95,16 +91,14 @@ public class Solution {
         //выбирать по очереди 1000 добавленных записей отдельными запросами по полю ID
         long startTime = System.currentTimeMillis();
 
-        try(Connection connection = getConnection()) {
+        try(Connection connection = getConnection();
+            Statement statement = connection.createStatement()) {
 
-            Statement statement = connection.createStatement();
-            List<TestSpeed> arrays = new ArrayList<>();
             for (int i = 1; i < 1001; i++) {
                 ResultSet resultSet = statement.executeQuery("SELECT * FROM TEST_SPEED WHERE ID = " + i + "");
                 while (resultSet.next()){
                     TestSpeed testSpeed = new TestSpeed(resultSet.getLong(1), resultSet.getString(2),
                             resultSet.getInt(3));
-                    arrays.add(testSpeed);
                 }
             }
         }catch (SQLException e){
@@ -120,17 +114,13 @@ public class Solution {
         //выбирать 1000 записей одним запросом
         long startTime = System.currentTimeMillis();
 
-        try(Connection connection = getConnection()) {
-
-            Statement statement = connection.createStatement();
-
-            List<TestSpeed> arrays = new ArrayList<>();
+        try(Connection connection = getConnection(); Statement statement = connection.createStatement()) {
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM TEST_SPEED WHERE ID >= 1 AND ID <= 1000");
+
             while (resultSet.next()){
                 TestSpeed testSpeed = new TestSpeed(resultSet.getLong(1), resultSet.getString(2),
                         resultSet.getInt(3));
-                arrays.add(testSpeed);
             }
         }catch (SQLException e){
             System.err.println("Something went wrong");

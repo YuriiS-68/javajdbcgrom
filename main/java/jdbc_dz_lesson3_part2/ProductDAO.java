@@ -11,8 +11,7 @@ public class ProductDAO {
 
     public List<Product> findProductsByPrice(int price, int delta){
 
-        try(Connection connection = getConnection()) {
-            Statement statement = connection.createStatement();
+        try(Connection connection = getConnection(); Statement statement = connection.createStatement()) {
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM PRODUCT WHERE PRICE >= " + (price - delta) + " AND PRICE <= " + (price + delta) + "");
 
@@ -39,8 +38,7 @@ public class ProductDAO {
         if (!validateWord(word))
             throw new Exception("The word did not pass the validation");
 
-        try(Connection connection = getConnection()) {
-            Statement statement = connection.createStatement();
+        try(Connection connection = getConnection(); Statement statement = connection.createStatement()) {
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM PRODUCT WHERE NAME = '" + word + "'");
 
@@ -60,8 +58,7 @@ public class ProductDAO {
     }
 
     public List<Product> findProductsWithEmptyDescription(){
-        try(Connection connection = getConnection()) {
-            Statement statement = connection.createStatement();
+        try(Connection connection = getConnection(); Statement statement = connection.createStatement()) {
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM PRODUCT WHERE DESCRIPTION IS NULL OR DESCRIPTION = ' ' OR LENGTH(DESCRIPTION)=0");
 

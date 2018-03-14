@@ -13,9 +13,8 @@ public class ProductDAO {
     private static final String PASS = "ifgjrkzr";
 
     public Product save(Product product){
-
-        try(Connection connection = getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO PRODUCT VALUES(?, ?, ?, ?)");
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO PRODUCT VALUES(?, ?, ?, ?)")) {
 
             preparedStatement.setLong(1, product.getId());
             preparedStatement.setString(2, product.getName());
@@ -35,8 +34,7 @@ public class ProductDAO {
     }
 
     public List<Product> getProducts(){
-        try(Connection connection = getConnection()) {
-            Statement statement = connection.createStatement();
+        try(Connection connection = getConnection(); Statement statement = connection.createStatement()) {
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM PRODUCT");
 
@@ -57,10 +55,8 @@ public class ProductDAO {
 
     public Product update(Product product){
 
-        Product productAfterUpdate = new Product();
-
-        try(Connection connection = getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE PRODUCT SET NAME = ?, DESCRIPTION = ?, PRICE = ? WHERE ID = " + product.getId()+ "");
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE PRODUCT SET NAME = ?, DESCRIPTION = ?, PRICE = ? WHERE ID = " + product.getId()+ "")) {
 
             preparedStatement.setString(1, product.getName());
             preparedStatement.setString(2, product.getDescription());
@@ -70,31 +66,15 @@ public class ProductDAO {
 
             System.out.println("save was finished with result " + res);
 
-            Statement statement = connection.createStatement();
-
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM PRODUCT WHERE ID = " + product.getId() + "");
-
-            while (resultSet.next()){
-                long id = resultSet.getLong(1);
-                String name = resultSet.getString(2);
-                String description = resultSet.getString(3);
-                int price = resultSet.getInt(4);
-
-                productAfterUpdate = new Product(id, name , description, price);
-
-            }
-            statement.close();
         }catch (SQLException e){
             System.err.println("Something went wrong");
             e.printStackTrace();
         }
-        return productAfterUpdate;
+        return product;
     }
 
     public void delete(long id){
-        try(Connection connection = getConnection()) {
-
-            Statement statement = connection.createStatement();
+        try(Connection connection = getConnection(); Statement statement = connection.createStatement()) {
 
             int response = statement.executeUpdate("DELETE FROM PRODUCT WHERE ID = " + id + "");
 
