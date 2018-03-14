@@ -10,8 +10,8 @@ public class Demo {
 
         //System.out.println("Lead time - " + solution.testDeletePerformance());
 
-        //System.out.println("Lead time - " + solution.testSelectByIdPerformance());
+        System.out.println("Lead time - " + solution.testSelectByIdPerformance());
 
-        System.out.println("Lead time - " + solution.testSelectPerformance());
+        //System.out.println("Lead time - " + solution.testSelectPerformance());
     }
 }

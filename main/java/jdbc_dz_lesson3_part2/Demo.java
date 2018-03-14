@@ -5,12 +5,12 @@ public class Demo {
 
         ProductDAO productDAO = new ProductDAO();
 
-        //System.out.println(productDAO.findProductsByPrice(200, 50));
+        System.out.println(productDAO.findProductsByPrice(200, 50));
 
         //Product product = new Product(1122, "test-1", "test description 1", 200);
 
-        //System.out.println(productDAO.findProductsByName("plate"));
+        //System.out.println(productDAO.findProductsByName("toy"));
 
-        System.out.println(productDAO.findProductsWithEmptyDescription());
+        //System.out.println(productDAO.findProductsWithEmptyDescription());
     }
 }

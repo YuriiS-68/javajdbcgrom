@@ -11,9 +11,13 @@ public class ProductDAO {
 
     public List<Product> findProductsByPrice(int price, int delta){
 
-        try(Connection connection = getConnection(); Statement statement = connection.createStatement()) {
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PRODUCT WHERE PRICE >= ? AND PRICE <= ?")) {
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM PRODUCT WHERE PRICE >= " + (price - delta) + " AND PRICE <= " + (price + delta) + "");
+            preparedStatement.setInt(1,(price - delta));
+            preparedStatement.setInt(2, (price + delta));
+
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             List<Product> products = new ArrayList<>();
             while (resultSet.next()){
@@ -38,9 +42,11 @@ public class ProductDAO {
         if (!validateWord(word))
             throw new Exception("The word did not pass the validation");
 
-        try(Connection connection = getConnection(); Statement statement = connection.createStatement()) {
+        try(Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PRODUCT WHERE NAME = ?")) {
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM PRODUCT WHERE NAME = '" + word + "'");
+            preparedStatement.setString(1, word);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             List<Product> products = new ArrayList<>();
             while (resultSet.next()){
