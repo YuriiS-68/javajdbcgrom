@@ -3,10 +3,10 @@ package jdbc_dz_lesson4_part1;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jdbc_dz_lesson4_part1.TransactionDemo.save;
-
 public class Demo {
     public static void main(String[] args){
+
+        TransactionDemo transactionDemo = new TransactionDemo();
         Product product1 = new Product(55, "!!!", "!!!", 777);
         Product product2 = new Product(66, "!!!", "!!!", 777);
         Product product3 = new Product(66, "!!!", "!!!", 777);
@@ -16,7 +16,7 @@ public class Demo {
         products.add(product2);
         products.add(product3);
 
-        save(products);
+        transactionDemo.save(products);
     }
 
 }

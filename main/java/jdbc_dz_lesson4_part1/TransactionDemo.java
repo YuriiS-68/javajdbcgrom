@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionDemo {
@@ -13,7 +12,7 @@ public class TransactionDemo {
     private static final String USER = "main";
     private static final String PASS = "ifgjrkzr";
 
-    public static void save(List<Product> products){
+    public void save(List<Product> products){
         try(Connection connection = getConnection()) {
 
             saveList(products, connection);
@@ -24,7 +23,7 @@ public class TransactionDemo {
         }
     }
 
-    private static void saveList(List<Product> products, Connection connection)throws SQLException{
+    private void saveList(List<Product> products, Connection connection)throws SQLException{
         long badId = 0;
         try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO PRODUCT VALUES(?, ?, ?, ?)")) {
 
@@ -51,7 +50,7 @@ public class TransactionDemo {
         }
     }
 
-    private static Connection getConnection()throws SQLException{
+    private Connection getConnection()throws SQLException{
         return DriverManager.getConnection(DB_URL, USER, PASS);
     }
 }
