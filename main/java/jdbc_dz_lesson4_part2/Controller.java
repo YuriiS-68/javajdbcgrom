@@ -1,7 +1,5 @@
 package jdbc_dz_lesson4_part2;
 
-import java.util.Arrays;
-
 public class Controller {
 
     private FileDAO fileDAO = new FileDAO();
@@ -23,6 +21,12 @@ public class Controller {
         Storage storageFromDB = storageDAO.findById(storage.getId());
         File fileFromDB = fileDAO.findById(file.getId());
 
+        if (storageFromDB == null)
+            throw new NullPointerException("There is no storage " + storage.getId() + " in the database");
+
+        if (fileFromDB == null)
+            throw new NullPointerException("The file " + file.getId() + " is not in the database");
+
         if (storageFromDB.getId() == 0)
             throw new Exception("Storage with id : " + storage.getId() + " in the database not found.");
 
@@ -40,6 +44,28 @@ public class Controller {
         storage.setStorageSize(storageFromDB.getStorageSize() - file.getSize());
         storageDAO.update(storage);
         return file;
+    }
+
+    public void delete(Storage storage, File file)throws Exception{
+        if (file == null || storage == null)
+            throw new Exception("Incoming data contains an error");
+
+        Storage storageFromDB = storageDAO.findById(storage.getId());
+        File fileFromDB = fileDAO.findById(file.getId());
+
+        if (storageFromDB == null)
+            throw new NullPointerException("There is no storage " + storage.getId() + " in the database");
+
+        if (fileFromDB == null)
+            throw new NullPointerException("The file " + file.getId() + " is not in the database");
+
+        if (fileFromDB.getStorageId() == storageFromDB.getId()){
+            fileDAO.delete(file.getId());
+            storage.setStorageSize(storageFromDB.getStorageSize() + fileFromDB.getSize());
+            storageDAO.update(storage);
+        }else {
+            throw new Exception("File with id " + file.getId() + " not found in storage " + storage.getId() + ".");
+        }
     }
 
     private boolean checkOnSameId(File fileInDB, File file){

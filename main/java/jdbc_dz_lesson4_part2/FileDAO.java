@@ -1,7 +1,5 @@
 package jdbc_dz_lesson4_part2;
 
-import oracle.sql.NUMBER;
-
 import java.sql.*;
 
 public class FileDAO extends GeneralDAO<File> {
@@ -38,7 +36,7 @@ public class FileDAO extends GeneralDAO<File> {
     }
 
     public void delete(long id){
-        try(Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM FILE_ WHERE ID = ?")) {
+        try(Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM FILE_ WHERE FILE_ID = ?")) {
 
             preparedStatement.setLong(1, id);
 
