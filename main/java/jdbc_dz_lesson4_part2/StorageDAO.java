@@ -44,7 +44,7 @@ public class StorageDAO extends GeneralDAO<Storage>{
 
             int res = preparedStatement.executeUpdate();
 
-            System.out.println("update storage was finished with result " + res);
+            System.out.println("update storage with id " + storage.getId() + " was finished with result " + res);
 
         }catch (SQLException e){
             System.err.println("Something went wrong");
