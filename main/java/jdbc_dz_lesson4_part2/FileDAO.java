@@ -1,6 +1,10 @@
 package jdbc_dz_lesson4_part2;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class FileDAO extends GeneralDAO<File> {
 
@@ -78,6 +82,29 @@ public class FileDAO extends GeneralDAO<File> {
                         resultSet.getString(3), resultSet.getString(4), resultSet.getLong(5));
             }
             return file;
+        }catch (SQLException e){
+            System.err.println("Something went wrong");
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public List<File> findById(Storage storage)throws Exception{
+
+        List<File> files = new ArrayList<>();
+
+        try(Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM FILE_ WHERE STORAGE_ID = ?")) {
+
+            preparedStatement.setLong(1, storage.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            File file = new File();
+            while (resultSet.next()){
+                file = new File(resultSet.getLong(1), resultSet.getLong(2),
+                        resultSet.getString(3), resultSet.getString(4), resultSet.getLong(5));
+                files.add(file);
+            }
+            return files;
         }catch (SQLException e){
             System.err.println("Something went wrong");
             e.printStackTrace();

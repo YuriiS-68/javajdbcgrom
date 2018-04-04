@@ -1,5 +1,6 @@
 package jdbc_dz_lesson4_part2;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 public class File {
@@ -77,6 +78,21 @@ public class File {
 
     public void setSize(long size) {
         this.size = size;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        File file = (File) o;
+        return id == file.id &&
+                Objects.equals(format, file.format);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, format);
     }
 
     @Override

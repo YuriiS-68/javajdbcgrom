@@ -1,5 +1,7 @@
 package jdbc_dz_lesson4_part2;
 
+import java.util.*;
+
 public class Controller {
 
     private FileDAO fileDAO = new FileDAO();
@@ -77,6 +79,87 @@ public class Controller {
         }else {
             throw new Exception("File with id " + fileFromDB.getId() + " not found in storage " + storageFromDB.getId() + ".");
         }
+    }
+
+    public void transferAll(Storage storageFrom, Storage storageTo)throws Exception{
+        //1. получить объекты хранилища
+        //2. по айди хранилища получить список находящихся в нём файлов
+        //3. проверить чтобы суммарный размер файлов из storageFrom не превышал размер хранилища storageTo
+        //4. проверить чтобы файлы из storageFrom не находились в storageTo
+        //5. проверить хранилище storageTo на соответствие форматов файлов из хранилища storageFrom
+        if (storageFrom == null || storageTo == null)
+            throw new Exception("Incoming data contains an error");
+
+        Storage storageFromDB = storageDAO.findById(storageFrom.getId());
+        Storage storageToDB = storageDAO.findById(storageTo.getId());
+
+        List<File> filesFrom = fileDAO.findById(storageFromDB);
+        List<File> filesTo = fileDAO.findById(storageToDB);
+
+
+    }
+
+    private boolean checkFreeSpaceInStorageTo(Storage storageTo, List<File> fileList){
+        if (storageTo == null || fileList == null)
+            return false;
+
+        long sumSizeFiles = 0;
+        for (File file : fileList){
+            sumSizeFiles += file.getSize();
+        }
+
+        return storageTo.getStorageSize() >= sumSizeFiles;
+    }
+
+    private boolean checkOnSameIdTransferAll(List<File> filesFrom, List<File> filesTo){
+        if (filesFrom == null || filesTo == null)
+            return false;
+
+        System.out.println("Files from -" + filesFrom);
+        System.out.println("Files to - " + filesTo);
+
+        for (File file : filesFrom){
+            for (File file1 : filesTo){
+                if (file1.getId() == file.getId()){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean checkFormatAll(List<File> filesFrom, Storage storageTo)throws Exception{
+        if (filesFrom == null || storageTo == null)
+            throw new Exception("Incoming data contains an error");
+
+        String[] formatsStorage = storageTo.getFormatSupported().split(",");
+
+        Set<String> strings = new HashSet<>();
+
+        for (File file : filesFrom){
+            strings.add(file.getFormat());
+        }
+
+        String[] formatsFile = strings.toArray(new String[strings.size()]);
+
+        System.out.println("List filesFrom " + filesFrom);
+        System.out.println("Formats in Set " + strings);
+        System.out.println("Formats in Storage " + Arrays.toString(formatsStorage));
+        System.out.println("Formats in file " + Arrays.toString(formatsFile));
+
+        boolean format = true;
+        for (int i = 0; i < formatsStorage.length; i++) {
+
+        }
+
+        for (String formatFile : formatsFile){
+            for (String formatStorage : formatsStorage){
+                if (formatFile != null && formatStorage != null && formatStorage.trim().equals(formatFile.trim())){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void validate(Storage storage, File fileIn, File file)throws Exception{
