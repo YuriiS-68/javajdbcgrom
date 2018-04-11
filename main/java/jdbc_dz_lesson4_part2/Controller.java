@@ -11,23 +11,18 @@ public class Controller {
     //В одном хранилище не могут хранится файлы с одинаковым айди, но могут хранится файлы с одинаковыми именами
     //Имя файла не может быть больше 10 символов, то есть файл с таким именем не может быть создан
 
-    //1. проверить файл на null +
-    //2. проверить файл и хранилище на совпадение форматов +
-    //3. проверить хранилище на вместимость +
-
     public File put(Storage storage, File file)throws Exception {
-        if (file == null || storage == null){
+        if (file == null || storage == null)
+            throw new Exception("Incoming data contains an error");
+
+        if (file.getStorageId() != 0)
             return null;
-        }
 
-        Storage storageFromDB = storageDAO.findById(storage.getId());
-        File fileFromDB = fileDAO.findById(file.getId());
-
-        validate(storageFromDB, fileFromDB, file);
+        validate(storage, file);
 
         file.setStorageId(storage.getId());
-        fileDAO.save(file);
-        storage.setStorageSize(storageFromDB.getStorageSize() - file.getSize());
+        fileDAO.update(file);
+        storage.setStorageSize(storage.getStorageSize() - file.getSize());
         storageDAO.update(storage);
 
         return file;
@@ -142,35 +137,88 @@ public class Controller {
 
         String[] formatsFile = strings.toArray(new String[strings.size()]);
 
-        System.out.println("List filesFrom " + filesFrom);
-        System.out.println("Formats in Set " + strings);
+        System.out.println("Length array Storage " + formatsStorage.length);
+        System.out.println("Length array File " + formatsFile.length);
         System.out.println("Formats in Storage " + Arrays.toString(formatsStorage));
         System.out.println("Formats in file " + Arrays.toString(formatsFile));
 
         boolean format = true;
-        for (int i = 0; i < formatsStorage.length; i++) {
+        int countStorage = 1;
 
+        if (formatsStorage.length < formatsFile.length)
+            return false;
+
+        if (formatsFile.length == 1){
+            for (String fileFormat : formatsFile){
+                for (String storageFormat : formatsStorage){
+                    if (fileFormat != null && storageFormat != null && fileFormat.equals(storageFormat.trim())){
+                        return true;
+                    }
+                    else format = false;
+                }
+            }
         }
 
-        for (String formatFile : formatsFile){
-            for (String formatStorage : formatsStorage){
-                if (formatFile != null && formatStorage != null && formatStorage.trim().equals(formatFile.trim())){
-                    return true;
+        for (String storageFormat : formatsStorage){
+            if (storageFormat != null){
+                int countFile = 1;
+                for (String fileFormat : formatsFile){
+                    if (fileFormat != null && !fileFormat.equals(storageFormat.trim()) && formatsFile.length != countFile){
+                        countFile++;
+                        continue;
+                    }
+
+                    if (fileFormat != null && !fileFormat.equals(storageFormat.trim()) && formatsFile.length == countFile && formatsStorage.length != countStorage){
+                        continue;
+                    }
+
+                    if (fileFormat != null && !fileFormat.equals(storageFormat.trim()) && formatsFile.length == countFile && formatsStorage.length == countStorage){
+                        return false;
+                    }
+
+                    if (fileFormat != null && !fileFormat.equals(storageFormat.trim()) && formatsFile.length == countFile && formatsStorage.length != countStorage){
+                        return false;
+                    }
+
+                    if (fileFormat != null && fileFormat.equals(storageFormat.trim()) && formatsStorage.length != countStorage && formatsFile.length != countFile){
+                        break;
+                    }
+
+                    if (fileFormat != null && fileFormat.equals(storageFormat.trim()) && formatsFile.length == countFile){
+                        return true;
+                    }
+
+                    if (fileFormat != null && fileFormat.equals(storageFormat.trim()) && formatsStorage.length == countStorage && formatsFile.length == countFile){
+                        return true;
+                    }
+                    countFile++;
+                    System.out.println("Count File - " + countFile);
                 }
+            }
+            countStorage++;
+            System.out.println("Count Storage - " + countStorage);
+        }
+        return format;
+    }
+
+    private boolean checkStrings(String string, String[] storage){
+        if (string == null)
+            return false;
+        String element = "";
+        for (String elStorage : storage){
+            if (elStorage != null && string.equals(elStorage.trim())){
+                return true;
             }
         }
         return false;
     }
 
-    private void validate(Storage storage, File fileIn, File file)throws Exception{
-        if (storage == null || fileIn == null || file == null)
+    private void validate(Storage storage, File file)throws Exception{
+        //1. проверить файл и хранилище на совпадение форматов
+        //2. проверить остаток свободного места в хранилище
+        //3. проверить что такого файла нет в хранилище
+        if (storage == null || file == null)
             throw new Exception("Incoming data contains an error");
-
-        if (storage.getId() == 0)
-            throw new NullPointerException("There is no storage " + storage.getId() + " in the database");
-
-        if (checkOnSameId(fileIn, file))
-            throw new Exception("A file with id: " + file.getId() + " already exists in the storage with id: " + storage.getId());
 
         if (checkFreeSpace(storage, file))
             throw new Exception("For storage with id: " + storage.getId() + " The file with id: " + file.getId() + " - is too large");
@@ -191,11 +239,6 @@ public class Controller {
 
         if (!checkFormat(storageTo, file))
             throw new Exception("The storage with id: " + storageTo.getId() + " does not support the file : " + file.getId());
-    }
-
-    private boolean checkOnSameId(File fileInDB, File file){
-
-        return fileInDB.getId() == file.getId();
     }
 
     private boolean checkOnSameIdOnTransfer(File file, Storage storageFrom, Storage storageTo, long id)throws Exception{

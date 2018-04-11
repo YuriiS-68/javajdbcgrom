@@ -11,11 +11,11 @@ public class Demo {
         StorageDAO storageDAO = new StorageDAO();
         Controller controller = new Controller();
 
-        File file1 = new File(1111, "test1", "txt", 130);
-        File file2 = new File(2222, "test2", "txt", 100);
-        File file3 = new File(3333, "test3", "doc", 150);
-        File file4 = new File(4444, "test4", "txt", 600);
-        File file5 = new File(5555, "test5", "txt", 120);
+        File file1 = new File(1111, "test1", "jpg", 130);
+        File file2 = new File(2222, "test2", "jpg", 100);
+        File file3 = new File(3333, "test3", "jpg", 150);
+        File file4 = new File(4444, "test4", "doc", 600);
+        File file5 = new File(5555, "test5", "jpg", 120);
         File file6 = new File(6666, "test6", "txt", 20);
 
         List<File> filesFrom = new ArrayList<>();
@@ -37,12 +37,10 @@ public class Demo {
         File[] files1 = new File[5];
         File[] files2 = new File[4];
 
-        Storage storage1 = new Storage(1111, files1, "doc, txt", "China", 500);
+        Storage storage1 = new Storage(1111, files1, "png, doc, jpg", "China", 500);
         Storage storage2 = new Storage(2222, files2, "txt, doc, jpg", "Korea", 480);
 
-
-
-        //fileDAO.save(file1);
+        //fileDAO.save(file3);
 
         //storageDAO.save(storage1);
 
@@ -52,9 +50,9 @@ public class Demo {
 
         //System.out.println(controller.checkOnSameIdTransferAll(filesFrom, filesTo));
 
-        System.out.println(controller.checkFormatAll(filesFrom, storage1));
+        //System.out.println(controller.checkFormatAll(filesFrom, storage1));
 
-        //controller.put(storage1, file6);
+        controller.put(storage1, file1);
 
         //controller.delete(storage1, file1);
 
