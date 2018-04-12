@@ -6,6 +6,7 @@ public class Controller {
 
     private FileDAO fileDAO = new FileDAO();
     private StorageDAO storageDAO = new StorageDAO();
+    private GeneralDAO generalDAO = new GeneralDAO();
     //Ограничения:
     //Storage может хранить файлы только поддерживаемого формата Учитывайте макс размер хранилища
     //В одном хранилище не могут хранится файлы с одинаковым айди, но могут хранится файлы с одинаковыми именами
@@ -21,9 +22,9 @@ public class Controller {
         validate(storage, file);
 
         file.setStorageId(storage.getId());
-        fileDAO.update(file);
         storage.setStorageSize(storage.getStorageSize() - file.getSize());
-        storageDAO.update(storage);
+
+        generalDAO.update(storage, file);
 
         return file;
     }

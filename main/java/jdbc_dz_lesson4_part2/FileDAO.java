@@ -3,8 +3,6 @@ package jdbc_dz_lesson4_part2;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class FileDAO extends GeneralDAO<File> {
 
