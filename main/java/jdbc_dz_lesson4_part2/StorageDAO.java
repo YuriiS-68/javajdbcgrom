@@ -35,12 +35,12 @@ public class StorageDAO extends GeneralDAO<Storage>{
 
     public Storage update(Storage storage){
         try(Connection connection = getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE STORAGE_ SET FORMAT_SUPPORTED = ?, " +
-                    "COUNTRY_STORAGE = ?, SIZE_STORAGE = ? WHERE STORAGE_ID = " + storage.getId()+ "")) {
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE STORAGE_ SET FORMAT_SUPPORTED = ?, COUNTRY_STORAGE = ?, SIZE_STORAGE = ? WHERE STORAGE_ID = ?")) {
 
             preparedStatement.setString(1, storage.getFormatSupported());
             preparedStatement.setString(2, storage.getStorageCountry());
             preparedStatement.setLong(3, storage.getStorageSize());
+            preparedStatement.setLong(4, storage.getId());
 
             int res = preparedStatement.executeUpdate();
 

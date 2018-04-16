@@ -54,9 +54,10 @@ public class FileDAO extends GeneralDAO<File> {
 
     public void update(File file){
         try(Connection connection = getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE FILE_ SET STORAGE_ID = ? WHERE FILE_ID = " + file.getId() + "")) {
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE FILE_ SET STORAGE_ID = ? WHERE FILE_ID = ?")) {
 
             preparedStatement.setLong(1, file.getStorageId());
+            preparedStatement.setLong(2, file.getId());
 
             int res = preparedStatement.executeUpdate();
 
@@ -90,15 +91,15 @@ public class FileDAO extends GeneralDAO<File> {
 
     public List<File> findById(Storage storage)throws Exception{
 
-        List<File> files = new ArrayList<>();
-
         try(Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM FILE_ WHERE STORAGE_ID = ?")) {
 
             preparedStatement.setLong(1, storage.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
-            File file = new File();
+
+            List<File> files = new ArrayList<>();
+
             while (resultSet.next()){
-                file = new File(resultSet.getLong(1), resultSet.getLong(2),
+                File file = new File(resultSet.getLong(1), resultSet.getLong(2),
                         resultSet.getString(3), resultSet.getString(4), resultSet.getLong(5));
                 files.add(file);
             }

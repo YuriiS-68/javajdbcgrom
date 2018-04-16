@@ -1,9 +1,6 @@
 package jdbc_dz_lesson4_part2;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class GeneralDAO<T> {
 
@@ -23,29 +20,33 @@ public class GeneralDAO<T> {
     }
 
     private void update(Storage storage, File file, Connection connection)throws SQLException{
-        try(PreparedStatement fileStatement = connection.prepareStatement("UPDATE FILE_ SET STORAGE_ID = ? WHERE FILE_ID = " + file.getId() + "");
-            PreparedStatement storageStatement = connection.prepareStatement("UPDATE STORAGE_ SET FORMAT_SUPPORTED = ?, " +
-                    "COUNTRY_STORAGE = ?, SIZE_STORAGE = ? WHERE STORAGE_ID = " + storage.getId()+ "")) {
 
+        try{
             connection.setAutoCommit(false);
 
-            fileStatement.setLong(1, file.getStorageId());
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE FILE_ SET STORAGE_ID = ? WHERE FILE_ID = ?");
 
-            storageStatement.setString(1, storage.getFormatSupported());
-            storageStatement.setString(2, storage.getStorageCountry());
-            storageStatement.setLong(3, storage.getStorageSize());
+            preparedStatement.setLong(1, file.getStorageId());
+            preparedStatement.setLong(2, file.getId());
 
-            int resFile = fileStatement.executeUpdate();
+            boolean resFile = preparedStatement.execute();
+            System.out.println("Update table File " + resFile);
 
-            int resStorage = storageStatement.executeUpdate();
+            preparedStatement = connection.prepareStatement("UPDATE STORAGE_ SET SIZE_STORAGE = ? WHERE STORAGE_ID = ?");
 
-            System.out.println("update file with id " + file.getId() + " was finished with result " + resFile);
-            System.out.println("update storage with id " + storage.getId() + " was finished with result " + resStorage);
+            preparedStatement.setLong(1, storage.getStorageSize());
+            preparedStatement.setLong(2, storage.getId());
+
+            boolean resStorage = preparedStatement.execute();
+            System.out.println("Update table Storage " + resStorage);
 
             connection.commit();
+            connection.close();
+            preparedStatement.close();
 
         }catch (SQLException e){
             connection.rollback();
+            connection.close();
             throw e;
         }
     }

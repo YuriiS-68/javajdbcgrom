@@ -54,6 +54,8 @@ public class Demo {
 
         controller.put(storage1, file1);
 
+        //System.out.println(controller.validate(storage1, file1));
+
         //controller.delete(storage1, file1);
 
         //controller.transferFile(storage2, storage1, 6666);
@@ -66,7 +68,7 @@ public class Demo {
 
         //controller.checkStorageSize(storage1, file4);
 
-        //System.out.println(controller.checkFormat(storage2, file4));
+        //System.out.println(controller.checkFormat(storage1, file1));
 
         //System.out.println(controller.checkOnSameId(file1));
 

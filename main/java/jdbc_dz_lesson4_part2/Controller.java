@@ -136,70 +136,7 @@ public class Controller {
             strings.add(file.getFormat());
         }
 
-        String[] formatsFile = strings.toArray(new String[strings.size()]);
-
-        System.out.println("Length array Storage " + formatsStorage.length);
-        System.out.println("Length array File " + formatsFile.length);
-        System.out.println("Formats in Storage " + Arrays.toString(formatsStorage));
-        System.out.println("Formats in file " + Arrays.toString(formatsFile));
-
-        boolean format = true;
-        int countStorage = 1;
-
-        if (formatsStorage.length < formatsFile.length)
-            return false;
-
-        if (formatsFile.length == 1){
-            for (String fileFormat : formatsFile){
-                for (String storageFormat : formatsStorage){
-                    if (fileFormat != null && storageFormat != null && fileFormat.equals(storageFormat.trim())){
-                        return true;
-                    }
-                    else format = false;
-                }
-            }
-        }
-
-        for (String storageFormat : formatsStorage){
-            if (storageFormat != null){
-                int countFile = 1;
-                for (String fileFormat : formatsFile){
-                    if (fileFormat != null && !fileFormat.equals(storageFormat.trim()) && formatsFile.length != countFile){
-                        countFile++;
-                        continue;
-                    }
-
-                    if (fileFormat != null && !fileFormat.equals(storageFormat.trim()) && formatsFile.length == countFile && formatsStorage.length != countStorage){
-                        continue;
-                    }
-
-                    if (fileFormat != null && !fileFormat.equals(storageFormat.trim()) && formatsFile.length == countFile && formatsStorage.length == countStorage){
-                        return false;
-                    }
-
-                    if (fileFormat != null && !fileFormat.equals(storageFormat.trim()) && formatsFile.length == countFile && formatsStorage.length != countStorage){
-                        return false;
-                    }
-
-                    if (fileFormat != null && fileFormat.equals(storageFormat.trim()) && formatsStorage.length != countStorage && formatsFile.length != countFile){
-                        break;
-                    }
-
-                    if (fileFormat != null && fileFormat.equals(storageFormat.trim()) && formatsFile.length == countFile){
-                        return true;
-                    }
-
-                    if (fileFormat != null && fileFormat.equals(storageFormat.trim()) && formatsStorage.length == countStorage && formatsFile.length == countFile){
-                        return true;
-                    }
-                    countFile++;
-                    System.out.println("Count File - " + countFile);
-                }
-            }
-            countStorage++;
-            System.out.println("Count Storage - " + countStorage);
-        }
-        return format;
+        return strings.containsAll(filesFrom);
     }
 
     private boolean checkStrings(String string, String[] storage){
