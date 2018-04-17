@@ -21,10 +21,11 @@ public class GeneralDAO<T> {
 
     private void update(Storage storage, File file, Connection connection)throws SQLException{
 
+        PreparedStatement preparedStatement = null;
         try{
             connection.setAutoCommit(false);
 
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE FILE_ SET STORAGE_ID = ? WHERE FILE_ID = ?");
+            preparedStatement = connection.prepareStatement("UPDATE FILE_ SET STORAGE_ID = ? WHERE FILE_ID = ?");
 
             preparedStatement.setLong(1, file.getStorageId());
             preparedStatement.setLong(2, file.getId());
@@ -41,13 +42,16 @@ public class GeneralDAO<T> {
             System.out.println("Update table Storage " + resStorage);
 
             connection.commit();
-            connection.close();
-            preparedStatement.close();
 
         }catch (SQLException e){
             connection.rollback();
-            connection.close();
             throw e;
+        }finally {
+            if (preparedStatement != null){
+                preparedStatement.close();
+            }
+
+            connection.setAutoCommit(true);
         }
     }
 

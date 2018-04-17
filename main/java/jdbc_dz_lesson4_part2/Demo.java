@@ -37,7 +37,7 @@ public class Demo {
         File[] files1 = new File[5];
         File[] files2 = new File[4];
 
-        Storage storage1 = new Storage(1111, files1, "png, doc, jpg", "China", 500);
+        Storage storage1 = new Storage(1111, files1, "png, doc, jpg", "China", 370);
         Storage storage2 = new Storage(2222, files2, "txt, doc, jpg", "Korea", 480);
 
         //fileDAO.save(file1);
@@ -52,7 +52,7 @@ public class Demo {
 
         //System.out.println(controller.checkFormatAll(filesFrom, storage1));
 
-        controller.put(storage1, file1);
+        controller.put(storage1, file3);
 
         //System.out.println(controller.validate(storage1, file1));
 

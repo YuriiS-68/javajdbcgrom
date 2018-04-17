@@ -33,18 +33,9 @@ public class Controller {
         if (file == null || storage == null)
             throw new Exception("Incoming data contains an error");
 
-        Storage storageFromDB = storageDAO.findById(storage.getId());
-        File fileFromDB = fileDAO.findById(file.getId());
-
-        if (storageFromDB == null || storageFromDB.getId() == 0)
-            throw new NullPointerException("There is no storage " + storage.getId() + " in the database");
-
-        if (fileFromDB == null)
-            throw new NullPointerException("The file " + file.getId() + " is not in the database");
-
-        if (fileFromDB.getStorageId() == storageFromDB.getId()){
+        if (file.getStorageId() == storage.getId()){
             fileDAO.delete(file.getId());
-            storage.setStorageSize(storageFromDB.getStorageSize() + fileFromDB.getSize());
+            storage.setStorageSize(storage.getStorageSize() + file.getSize());
             storageDAO.update(storage);
         }else {
             throw new Exception("File with id " + file.getId() + " not found in storage " + storage.getId() + ".");
