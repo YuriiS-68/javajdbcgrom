@@ -34,9 +34,8 @@ public class Controller {
             throw new Exception("Incoming data contains an error");
 
         if (file.getStorageId() == storage.getId()){
-            fileDAO.delete(file.getId());
             storage.setStorageSize(storage.getStorageSize() + file.getSize());
-            storageDAO.update(storage);
+            generalDAO.delete(storage, file);
         }else {
             throw new Exception("File with id " + file.getId() + " not found in storage " + storage.getId() + ".");
         }
@@ -115,19 +114,27 @@ public class Controller {
         return true;
     }
 
-    public boolean checkFormatAll(List<File> filesFrom, Storage storageTo)throws Exception{
+    private boolean checkFormatAll(List<File> filesFrom, Storage storageTo)throws Exception{
         if (filesFrom == null || storageTo == null)
             throw new Exception("Incoming data contains an error");
 
         String[] formatsStorage = storageTo.getFormatSupported().split(",");
 
-        Set<String> strings = new HashSet<>();
+        List<String> storageFormats = new ArrayList<>();
 
-        for (File file : filesFrom){
-            strings.add(file.getFormat());
+        for (String element : formatsStorage){
+            if (element != null){
+                storageFormats.add(element.trim());
+            }
         }
 
-        return strings.containsAll(filesFrom);
+        Set<String> fileFormats = new HashSet<>();
+
+        for (File file : filesFrom){
+            fileFormats.add(file.getFormat());
+        }
+
+        return storageFormats.containsAll(fileFormats);
     }
 
     private boolean checkStrings(String string, String[] storage){

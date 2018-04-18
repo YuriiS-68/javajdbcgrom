@@ -13,7 +13,7 @@ public class Demo {
 
         File file1 = new File(1111, "test1", "jpg", 130);
         File file2 = new File(2222, "test2", "jpg", 100);
-        File file3 = new File(3333, "test3", "jpg", 150);
+        File file3 = new File(3333, 1111, "test3", "png", 150);
         File file4 = new File(4444, "test4", "doc", 600);
         File file5 = new File(5555, "test5", "jpg", 120);
         File file6 = new File(6666, "test6", "txt", 20);
@@ -37,10 +37,10 @@ public class Demo {
         File[] files1 = new File[5];
         File[] files2 = new File[4];
 
-        Storage storage1 = new Storage(1111, files1, "png, doc, jpg", "China", 370);
+        Storage storage1 = new Storage(1111, files1, "png, doc, jpg", "China", 220);
         Storage storage2 = new Storage(2222, files2, "txt, doc, jpg", "Korea", 480);
 
-        //fileDAO.save(file1);
+        //fileDAO.save(file3);
 
         //storageDAO.save(storage1);
 
@@ -52,11 +52,11 @@ public class Demo {
 
         //System.out.println(controller.checkFormatAll(filesFrom, storage1));
 
-        controller.put(storage1, file3);
+        //controller.put(storage1, file3);
 
         //System.out.println(controller.validate(storage1, file1));
 
-        //controller.delete(storage1, file1);
+        controller.delete(storage1, file3);
 
         //controller.transferFile(storage2, storage1, 6666);
 
