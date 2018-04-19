@@ -6,10 +6,6 @@ import java.util.List;
 
 public class FileDAO extends GeneralDAO<File> {
 
-    private static final String DB_URL = "jdbc:oracle:thin:@gromcode-lesson.cjqbbseqr63c.eu-central-1.rds.amazonaws.com:1521:ORCL";
-    private static final String USER = "main";
-    private static final String PASS = "ifgjrkzr";
-
     public File save(File file){
 
         try(Connection connection = getConnection();
@@ -110,9 +106,5 @@ public class FileDAO extends GeneralDAO<File> {
         }
 
         return null;
-    }
-
-    private Connection getConnection()throws SQLException {
-        return DriverManager.getConnection(DB_URL, USER, PASS);
     }
 }

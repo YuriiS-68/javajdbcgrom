@@ -4,10 +4,6 @@ import java.sql.*;
 
 public class StorageDAO extends GeneralDAO<Storage>{
 
-    private static final String DB_URL = "jdbc:oracle:thin:@gromcode-lesson.cjqbbseqr63c.eu-central-1.rds.amazonaws.com:1521:ORCL";
-    private static final String USER = "main";
-    private static final String PASS = "ifgjrkzr";
-
     public Storage save(Storage storage){
         try(Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO STORAGE_ VALUES(?, ?, ?, ?)")) {
@@ -73,9 +69,5 @@ public class StorageDAO extends GeneralDAO<Storage>{
         }
 
         return null;
-    }
-
-    private Connection getConnection()throws SQLException {
-        return DriverManager.getConnection(DB_URL, USER, PASS);
     }
 }

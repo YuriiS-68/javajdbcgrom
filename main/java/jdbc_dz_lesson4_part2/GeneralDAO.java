@@ -1,6 +1,7 @@
 package jdbc_dz_lesson4_part2;
 
 import java.sql.*;
+import java.util.List;
 
 public class GeneralDAO<T> {
 
@@ -27,6 +28,89 @@ public class GeneralDAO<T> {
         }catch (SQLException e){
             System.err.println("Something went wrong");
             e.printStackTrace();
+        }
+    }
+
+    public void transfer(Storage storageFrom, Storage storageTo, File file)throws Exception{
+        try(Connection connection = getConnection()) {
+
+            transfer(storageFrom, storageTo, file, connection);
+
+        }catch (SQLException e){
+            System.err.println("Something went wrong");
+            e.printStackTrace();
+        }
+    }
+
+    public void transferAll(List<File> filesFrom, Storage storageFrom, Storage storageTo)throws Exception{
+        try(Connection connection = getConnection()) {
+
+            transferAll(storageFrom, storageTo, filesFrom, connection);
+
+        }catch (SQLException e){
+            System.err.println("Something went wrong");
+            e.printStackTrace();
+        }
+    }
+
+    private void transferAll(Storage storageFrom, Storage storageTo, List<File> filesFrom, Connection connection)throws Exception{
+
+        PreparedStatement preparedStatement = null;
+        try{
+            connection.setAutoCommit(false);
+
+            for (File file : filesFrom){
+                preparedStatement = connection.prepareStatement("UPDATE FILE_ SET STORAGE_ID = ? WHERE FILE_ID = ?");
+                updateFileTable(file, preparedStatement, connection);
+            }
+
+            preparedStatement = connection.prepareStatement("UPDATE STORAGE_ SET SIZE_STORAGE = ? WHERE STORAGE_ID = ?");
+
+            updateStorageTable(storageFrom, preparedStatement, connection);
+
+            updateStorageTable(storageTo, preparedStatement, connection);
+
+            connection.commit();
+
+        }catch (SQLException e){
+            connection.rollback();
+            throw e;
+        }finally {
+            if (preparedStatement != null){
+                preparedStatement.close();
+            }
+
+            connection.setAutoCommit(true);
+        }
+    }
+
+    private void transfer(Storage storageFrom, Storage storageTo, File file, Connection connection)throws Exception{
+
+        PreparedStatement preparedStatement = null;
+        try{
+            connection.setAutoCommit(false);
+
+            preparedStatement = connection.prepareStatement("UPDATE FILE_ SET STORAGE_ID = ? WHERE FILE_ID = ?");
+
+            updateFileTable(file, preparedStatement, connection);
+
+            preparedStatement = connection.prepareStatement("UPDATE STORAGE_ SET SIZE_STORAGE = ? WHERE STORAGE_ID = ?");
+
+            updateStorageTable(storageFrom, preparedStatement, connection);
+
+            updateStorageTable(storageTo, preparedStatement, connection);
+
+            connection.commit();
+
+        }catch (SQLException e){
+            connection.rollback();
+            throw e;
+        }finally {
+            if (preparedStatement != null){
+                preparedStatement.close();
+            }
+
+            connection.setAutoCommit(true);
         }
     }
 
@@ -133,24 +217,7 @@ public class GeneralDAO<T> {
         }
     }
 
-    public Object save(Object object){
-
-        return object;
-    }
-
-    public Object update(Object object){
-
-
-        return object;
-    }
-
-    public Object findById(long id)throws Exception{
-
-
-        return null;
-    }
-
-    private Connection getConnection()throws SQLException {
+    public Connection getConnection()throws SQLException {
         return DriverManager.getConnection(DB_URL, USER, PASS);
     }
 }
