@@ -1,10 +1,5 @@
 package jdbc_dz_lesson4_part2;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
 public class Demo {
     public static void main(String[] args)throws Exception {
         FileDAO fileDAO = new FileDAO();
@@ -21,20 +16,20 @@ public class Demo {
         File[] files1 = new File[5];
         File[] files2 = new File[4];
 
-        Storage storage1 = new Storage(1111, files1, "png, doc, jpg", "China", 270);
+        Storage storage1 = new Storage(1111, files1, "png, doc, jpg", "China", 550);
         Storage storage2 = new Storage(2222, files2, "txt, jpg, png", "Korea", 480);
 
         //fileDAO.save(file1);
 
         //storageDAO.save(storage2);
 
-        //controller.put(storage1, file3);
+        //controller.put(storage1, file2);
 
-        //controller.delete(storage1, file3);
+        //controller.delete(storage1, file2);
 
-        //controller.transferFile(storage2, storage1, 3333);
+        controller.transferFile(storage1, storage2, 2222);
 
-        controller.transferAll(storage1, storage2);
+        //controller.transferAll(storage1, storage2);
 
     }
 }

@@ -52,7 +52,11 @@ public class FileDAO extends GeneralDAO<File> {
         try(Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE FILE_ SET STORAGE_ID = ? WHERE FILE_ID = ?")) {
 
-            preparedStatement.setLong(1, file.getStorageId());
+            if (file.getStorageId() == 0){
+                preparedStatement.setNull(1, Types.NULL);
+            }
+            else preparedStatement.setLong(1, file.getStorageId());
+
             preparedStatement.setLong(2, file.getId());
 
             int res = preparedStatement.executeUpdate();

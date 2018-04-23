@@ -13,29 +13,21 @@ public class Controller {
     //Имя файла не может быть больше 10 символов, то есть файл с таким именем не может быть создан
 
     public File put(Storage storage, File file)throws Exception {
-        if (file == null || storage == null)
-            throw new Exception("Incoming data contains an error");
-
-        if (file.getStorageId() != 0)
-            return null;
 
         validate(storage, file);
 
         file.setStorageId(storage.getId());
-        storage.setStorageSize(storage.getStorageSize() - file.getSize());
 
-        generalDAO.update(storage, file);
+        fileDAO.update(file);
 
         return file;
     }
 
     public void delete(Storage storage, File file)throws Exception{
-        if (file == null || storage == null)
-            throw new Exception("Incoming data contains an error");
 
         if (file.getStorageId() == storage.getId()){
-            storage.setStorageSize(storage.getStorageSize() + file.getSize());
-            generalDAO.delete(storage, file);
+            file.setStorageId(0);
+            fileDAO.update(file);
         }else {
             throw new Exception("File with id " + file.getId() + " not found in storage " + storage.getId() + ".");
         }
@@ -54,9 +46,7 @@ public class Controller {
 
         if (file.getStorageId() == storageFrom.getId()){
             file.setStorageId(storageTo.getId());
-            storageFrom.setStorageSize(storageFrom.getStorageSize() + file.getSize());
-            storageTo.setStorageSize(storageTo.getStorageSize() - file.getSize());
-            generalDAO.transfer(storageFrom, storageTo, file);
+            fileDAO.update(file);
         }else {
             throw new Exception("File with id " + file.getId() + " not found in storage " + storageFrom.getId() + ".");
         }
@@ -94,11 +84,9 @@ public class Controller {
         //1. проверить файл и хранилище на совпадение форматов
         //2. проверить остаток свободного места в хранилище
         //3. проверить что такого файла нет в хранилище
-        if (storage == null || file == null)
-            throw new Exception("Incoming data contains an error");
 
         if (checkFreeSpace(storage, file))
-            throw new Exception("For storage with id: " + storage.getId() + " The file with id: " + file.getId() + " - is too large");
+            throw new Exception("For storage with id: " + storage.getId() + " the file with id: " + file.getId() + " - is too large");
 
         if (!checkFormat(storage, file))
             throw new Exception("The storage with id: " + storage.getId() + " does not support the file : " + file.getId());
@@ -108,11 +96,6 @@ public class Controller {
         //1. проверяю наличие файла в хранилище1, из которой он переносится, и на отсутствие файла в хранилище2, в которую переносится
         //2. проверяю остаток свободного места в хранилище2
         //3. проверяю хранилище2 на поддержку формата файла
-        if (storageFrom == null || storageTo == null || file == null || id == 0)
-            throw new NullPointerException("Incoming data contains an error");
-
-        if (file.getId() == 0)
-            throw new Exception("The file with id " + id + " is not in the database " + storageFrom.getId());
 
         if (checkOnSameIdOnTransfer(file, storageFrom, storageTo))
             throw new Exception("A file with id: " + file.getId() + " with the same id already exists in the storage with id: " + storageTo.getId());
@@ -195,15 +178,18 @@ public class Controller {
     }
 
     private boolean checkFreeSpace(Storage storage, File file)throws Exception{
-        if (storage == null || file == null)
-            throw new Exception("Incoming data contains an error");
 
-        return storage.getStorageSize() < file.getSize();
+        long sum = 0;
+        for (File element : fileDAO.findById(storage)){
+            sum += element.getSize();
+        }
+
+        long freeSpace = storage.getStorageSize() - sum;
+
+        return freeSpace < file.getSize();
     }
 
-    private boolean checkFormat(Storage storage, File file)throws Exception {
-        if (storage == null || file == null)
-            throw new Exception("Incoming data contains an error");
+    private boolean checkFormat(Storage storage, File file){
 
         String[] formatsStorage = storage.getFormatSupported().split(",");
 

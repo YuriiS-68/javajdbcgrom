@@ -9,7 +9,7 @@ public class GeneralDAO<T> {
     private static final String USER = "main";
     private static final String PASS = "ifgjrkzr";
 
-    public void update(Storage storage, File file)throws Exception{
+    void update(Storage storage, File file)throws Exception{
         try(Connection connection = getConnection()) {
 
             update(storage, file, connection);
@@ -20,7 +20,7 @@ public class GeneralDAO<T> {
         }
     }
 
-    public void delete(Storage storage, File file)throws Exception{
+    void delete(Storage storage, File file)throws Exception{
         try(Connection connection = getConnection()) {
 
             delete(storage, file, connection);
@@ -31,7 +31,7 @@ public class GeneralDAO<T> {
         }
     }
 
-    public void transfer(Storage storageFrom, Storage storageTo, File file)throws Exception{
+    void transfer(Storage storageFrom, Storage storageTo, File file)throws Exception{
         try(Connection connection = getConnection()) {
 
             transfer(storageFrom, storageTo, file, connection);
@@ -42,7 +42,7 @@ public class GeneralDAO<T> {
         }
     }
 
-    public void transferAll(List<File> filesFrom, Storage storageFrom, Storage storageTo)throws Exception{
+    void transferAll(List<File> filesFrom, Storage storageFrom, Storage storageTo)throws Exception{
         try(Connection connection = getConnection()) {
 
             transferAll(storageFrom, storageTo, filesFrom, connection);
