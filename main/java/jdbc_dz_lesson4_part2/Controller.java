@@ -60,10 +60,13 @@ public class Controller {
         if (storageFrom == null || storageTo == null)
             throw new Exception("Incoming data contains an error");
 
-        List<File> filesFrom = fileDAO.findById(storageFrom);
-        List<File> filesTo = fileDAO.findById(storageTo);
+        File[] filesFrom = storageDAO.findById(storageFrom.getId()).getFiles();
+        File[] filesTo = storageDAO.findById(storageTo.getId()).getFiles();
 
-        validateTransferAll(filesFrom, filesTo, storageTo);
+        List<File> fileListFrom = Arrays.asList(filesFrom);
+        List<File> fileListTo = Arrays.asList(filesTo);
+
+        validateTransferAll(fileListFrom, fileListTo, storageTo);
 
         if (storageFrom.getId() != storageTo.getId()){
             long sumSizeFilesFrom = 0;
@@ -72,9 +75,9 @@ public class Controller {
                 element.setStorageId(storageTo.getId());
             }
 
-            storageFrom.setStorageSize(storageFrom.getStorageSize() + sumSizeFilesFrom);
-            storageTo.setStorageSize(storageTo.getStorageSize() - sumSizeFilesFrom);
-            generalDAO.transferAll(filesFrom, storageFrom, storageTo);
+            //storageFrom.setStorageSize(storageFrom.getStorageSize() + sumSizeFilesFrom);
+            //storageTo.setStorageSize(storageTo.getStorageSize() - sumSizeFilesFrom);
+            generalDAO.transferAll(fileListFrom, storageFrom, storageTo);
         }else {
             throw new Exception("Can not transfer files from storage " + storageFrom.getId());
         }
@@ -97,7 +100,7 @@ public class Controller {
         //2. проверяю остаток свободного места в хранилище2
         //3. проверяю хранилище2 на поддержку формата файла
 
-        if (checkOnSameIdOnTransfer(file, storageFrom, storageTo))
+        if (checkOnSameIdOnTransfer(file, storageFrom, storageTo, id))
             throw new Exception("A file with id: " + file.getId() + " with the same id already exists in the storage with id: " + storageTo.getId());
 
         validate(storageTo, file);
@@ -167,12 +170,12 @@ public class Controller {
         return storageFormats.containsAll(fileFormats);
     }
 
-    private boolean checkOnSameIdOnTransfer(File file, Storage storageFrom, Storage storageTo)throws Exception{
-        if (file == null || storageFrom == null || storageTo == null)
+    private boolean checkOnSameIdOnTransfer(File file, Storage storageFrom, Storage storageTo, long id)throws Exception{
+        if (file == null || storageFrom == null || storageTo == null || id == 0)
             throw new Exception("Incoming data contains an error");
 
         if (file.getStorageId() != storageFrom.getId())
-            throw new Exception("The file with id " + file.getId() + " is not in the database " + storageFrom.getId());
+            throw new Exception("The file with id " + id + " is not in the database " + storageFrom.getId());
 
         return file.getStorageId() == storageTo.getId();
     }
@@ -180,8 +183,10 @@ public class Controller {
     private boolean checkFreeSpace(Storage storage, File file)throws Exception{
 
         long sum = 0;
-        for (File element : fileDAO.findById(storage)){
-            sum += element.getSize();
+        for (File element : storageDAO.findById(storage.getId()).getFiles()){
+            if (element != null){
+                sum += element.getSize();
+            }
         }
 
         long freeSpace = storage.getStorageSize() - sum;

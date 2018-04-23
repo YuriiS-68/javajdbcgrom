@@ -9,7 +9,7 @@ public class Demo {
         File file1 = new File(1111, "test1", "jpg", 130);
         File file2 = new File(2222, "test2", "jpg", 100);
         File file3 = new File(3333, "test3", "png", 150);
-        File file4 = new File(4444, "test4", "doc", 600);
+        File file4 = new File(4444, "test4", "txt", 250);
         File file5 = new File(5555, "test5", "jpg", 120);
         File file6 = new File(6666, "test6", "txt", 20);
 
@@ -19,17 +19,19 @@ public class Demo {
         Storage storage1 = new Storage(1111, files1, "png, doc, jpg", "China", 550);
         Storage storage2 = new Storage(2222, files2, "txt, jpg, png", "Korea", 480);
 
-        //fileDAO.save(file1);
+        //fileDAO.save(file4);
 
         //storageDAO.save(storage2);
 
-        //controller.put(storage1, file2);
+        //controller.put(storage1, file4);
 
         //controller.delete(storage1, file2);
 
-        controller.transferFile(storage1, storage2, 2222);
+        controller.transferFile(storage1, storage2, 3333);
 
         //controller.transferAll(storage1, storage2);
+
+        //storageDAO.findById(2222);
 
     }
 }

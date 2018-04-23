@@ -89,7 +89,7 @@ public class FileDAO extends GeneralDAO<File> {
         return null;
     }
 
-    public List<File> findById(Storage storage)throws Exception{
+    /*public List<File> findById(Storage storage)throws Exception{
 
         try(Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM FILE_ WHERE STORAGE_ID = ?")) {
 
@@ -110,5 +110,5 @@ public class FileDAO extends GeneralDAO<File> {
         }
 
         return null;
-    }
+    }*/
 }
