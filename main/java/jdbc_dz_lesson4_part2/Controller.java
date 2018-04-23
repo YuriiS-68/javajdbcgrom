@@ -37,9 +37,6 @@ public class Controller {
         //1. проверить есть ли файл в хранилище, в которое файл перемещаем
         //2. проверить поддерживает ли хранилище формат файла
         //3. проверить хватит ли свободного места для записываемого файла
-        if (storageFrom == null || storageTo == null || id == 0)
-            throw new Exception("Incoming data contains an error");
-
         File file = fileDAO.findById(id);
 
         validateForTransferFile(storageFrom, storageTo, file, id);
@@ -57,8 +54,6 @@ public class Controller {
         //2. проверить чтобы суммарный размер файлов из storageFrom не превышал размер свободного места в хранилищу storageTo
         //3. проверить чтобы файлы из storageFrom не находились в storageTo
         //4. проверить хранилище storageTo на соответствие форматов файлов из хранилища storageFrom
-        if (storageFrom == null || storageTo == null)
-            throw new Exception("Incoming data contains an error");
 
         File[] filesFrom = storageDAO.findById(storageFrom.getId()).getFiles();
         File[] filesTo = storageDAO.findById(storageTo.getId()).getFiles();
@@ -87,7 +82,6 @@ public class Controller {
         //1. проверить файл и хранилище на совпадение форматов
         //2. проверить остаток свободного места в хранилище
         //3. проверить что такого файла нет в хранилище
-
         if (checkFreeSpace(storage, file))
             throw new Exception("For storage with id: " + storage.getId() + " the file with id: " + file.getId() + " - is too large");
 
@@ -99,7 +93,6 @@ public class Controller {
         //1. проверяю наличие файла в хранилище1, из которой он переносится, и на отсутствие файла в хранилище2, в которую переносится
         //2. проверяю остаток свободного места в хранилище2
         //3. проверяю хранилище2 на поддержку формата файла
-
         if (checkOnSameIdOnTransfer(file, storageFrom, storageTo, id))
             throw new Exception("A file with id: " + file.getId() + " with the same id already exists in the storage with id: " + storageTo.getId());
 
@@ -107,13 +100,10 @@ public class Controller {
     }
 
     private void validateTransferAll(List<File> filesFrom, List<File> filesTo, Storage storageTo)throws Exception{
-        if (filesFrom == null || filesTo == null || storageTo == null)
-            throw new NullPointerException("Incoming data contains an error");
-
         if (!checkFreeSpaceInStorageTo(storageTo, filesFrom))
             throw new Exception("The amount of free space in the repository " + storageTo.getId() + " is less than the total size of the files for writing");
 
-        if (!checkOnSameIdTransferAll(filesFrom, filesTo, storageTo))
+        if (!checkOnSameIdTransferAll(filesFrom, filesTo))
             throw new Exception("One of the files already exists in the repository " + storageTo.getId());
 
         if (!checkFormatAll(filesFrom, storageTo))
@@ -121,9 +111,7 @@ public class Controller {
     }
 
 
-    private boolean checkFreeSpaceInStorageTo(Storage storageTo, List<File> fileList)throws Exception{
-        if (storageTo == null || fileList == null)
-            throw new Exception("Incoming data contains an error");
+    private boolean checkFreeSpaceInStorageTo(Storage storageTo, List<File> fileList){
 
         long sumSizeFiles = 0;
         for (File file : fileList){
@@ -133,9 +121,7 @@ public class Controller {
         return storageTo.getStorageSize() >= sumSizeFiles;
     }
 
-    private boolean checkOnSameIdTransferAll(List<File> filesFrom, List<File> filesTo, Storage storageTo)throws Exception{
-        if (filesFrom == null || filesTo == null || storageTo == null)
-            throw new Exception("Incoming data contains an error");
+    private boolean checkOnSameIdTransferAll(List<File> filesFrom, List<File> filesTo){
 
         for (File file : filesFrom){
             for (File file1 : filesTo){
