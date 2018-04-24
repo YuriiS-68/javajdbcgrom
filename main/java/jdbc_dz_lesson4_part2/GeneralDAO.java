@@ -1,7 +1,6 @@
 package jdbc_dz_lesson4_part2;
 
 import java.sql.*;
-import java.util.List;
 
 public class GeneralDAO<T> {
 
@@ -9,7 +8,7 @@ public class GeneralDAO<T> {
     private static final String USER = "main";
     private static final String PASS = "ifgjrkzr";
 
-    void update(Storage storage, File file)throws Exception{
+    /*void update(Storage storage, File file)throws Exception{
         try(Connection connection = getConnection()) {
 
             update(storage, file, connection);
@@ -40,12 +39,12 @@ public class GeneralDAO<T> {
             System.err.println("Something went wrong");
             e.printStackTrace();
         }
-    }
+    }*/
 
-    void transferAll(List<File> filesFrom, Storage storageFrom, Storage storageTo)throws Exception{
+    void transferAll(File[] files)throws Exception{
         try(Connection connection = getConnection()) {
 
-            transferAll(storageFrom, storageTo, filesFrom, connection);
+            transferAll(files, connection);
 
         }catch (SQLException e){
             System.err.println("Something went wrong");
@@ -53,22 +52,16 @@ public class GeneralDAO<T> {
         }
     }
 
-    private void transferAll(Storage storageFrom, Storage storageTo, List<File> filesFrom, Connection connection)throws Exception{
+    private void transferAll(File[] files, Connection connection)throws Exception{
 
-        PreparedStatement preparedStatement = null;
         try{
             connection.setAutoCommit(false);
 
-            for (File file : filesFrom){
-                preparedStatement = connection.prepareStatement("UPDATE FILE_ SET STORAGE_ID = ? WHERE FILE_ID = ?");
-                updateFileTable(file, preparedStatement, connection);
+            for (File file : files){
+                if (file != null){
+                    updateFileTable(file, connection);
+                }
             }
-
-            preparedStatement = connection.prepareStatement("UPDATE STORAGE_ SET SIZE_STORAGE = ? WHERE STORAGE_ID = ?");
-
-            updateStorageTable(storageFrom, preparedStatement, connection);
-
-            updateStorageTable(storageTo, preparedStatement, connection);
 
             connection.commit();
 
@@ -76,15 +69,28 @@ public class GeneralDAO<T> {
             connection.rollback();
             throw e;
         }finally {
-            if (preparedStatement != null){
-                preparedStatement.close();
-            }
-
             connection.setAutoCommit(true);
         }
     }
 
-    private void transfer(Storage storageFrom, Storage storageTo, File file, Connection connection)throws Exception{
+    private void updateFileTable(File file, Connection connection)throws Exception{
+        if (file == null || connection == null)
+            throw new Exception("Incoming data contains an error");
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement("UPDATE FILE_ SET STORAGE_ID_F = ? WHERE FILE_ID = ?")) {
+
+            preparedStatement.setLong(1, file.getStorageId());
+            preparedStatement.setLong(2, file.getId());
+
+            boolean res = preparedStatement.execute();
+
+        }catch (SQLException e){
+            System.err.println("Something went wrong");
+            e.printStackTrace();
+        }
+    }
+
+    /*private void transfer(Storage storageFrom, Storage storageTo, File file, Connection connection)throws Exception{
 
         PreparedStatement preparedStatement = null;
         try{
@@ -92,7 +98,7 @@ public class GeneralDAO<T> {
 
             preparedStatement = connection.prepareStatement("UPDATE FILE_ SET STORAGE_ID = ? WHERE FILE_ID = ?");
 
-            updateFileTable(file, preparedStatement, connection);
+            updateFileTable(file, connection);
 
             preparedStatement = connection.prepareStatement("UPDATE STORAGE_ SET SIZE_STORAGE = ? WHERE STORAGE_ID = ?");
 
@@ -150,7 +156,7 @@ public class GeneralDAO<T> {
 
             preparedStatement = connection.prepareStatement("UPDATE FILE_ SET STORAGE_ID = ? WHERE FILE_ID = ?");
 
-            updateFileTable(file, preparedStatement, connection);
+            updateFileTable(file, connection);
 
             preparedStatement = connection.prepareStatement("UPDATE STORAGE_ SET SIZE_STORAGE = ? WHERE STORAGE_ID = ?");
 
@@ -167,22 +173,6 @@ public class GeneralDAO<T> {
             }
 
             connection.setAutoCommit(true);
-        }
-    }
-
-    private void updateFileTable(File file, PreparedStatement preparedStatement, Connection connection)throws Exception{
-        if (file == null || preparedStatement == null || connection == null)
-            throw new Exception("Incoming data contains an error");
-
-        try {
-            preparedStatement.setLong(1, file.getStorageId());
-            preparedStatement.setLong(2, file.getId());
-
-            boolean res = preparedStatement.execute();
-
-        }catch (SQLException e){
-            System.err.println("Something went wrong");
-            e.printStackTrace();
         }
     }
 
@@ -215,7 +205,7 @@ public class GeneralDAO<T> {
             System.err.println("Something went wrong");
             e.printStackTrace();
         }
-    }
+    }*/
 
     public Connection getConnection()throws SQLException {
         return DriverManager.getConnection(DB_URL, USER, PASS);

@@ -55,24 +55,40 @@ public class Controller {
         //3. проверить чтобы файлы из storageFrom не находились в storageTo
         //4. проверить хранилище storageTo на соответствие форматов файлов из хранилища storageFrom
 
-        File[] filesFrom = storageDAO.findById(storageFrom.getId()).getFiles();
-        File[] filesTo = storageDAO.findById(storageTo.getId()).getFiles();
+        List<File> fileListFrom = new ArrayList<>(Arrays.asList(storageFrom.getFiles()));
 
-        List<File> fileListFrom = Arrays.asList(filesFrom);
-        List<File> fileListTo = Arrays.asList(filesTo);
+        List<File> fileListTo = new ArrayList<>(Arrays.asList(storageTo.getFiles()));
 
         validateTransferAll(fileListFrom, fileListTo, storageTo);
 
         if (storageFrom.getId() != storageTo.getId()){
-            long sumSizeFilesFrom = 0;
-            for (File element : filesFrom){
-                sumSizeFilesFrom += element.getSize();
-                element.setStorageId(storageTo.getId());
+            for (File fileFrom : fileListFrom){
+                if (fileFrom != null){
+                    fileFrom.setStorageId(storageTo.getId());
+                    fileListTo.add(fileFrom);
+                }
             }
 
-            //storageFrom.setStorageSize(storageFrom.getStorageSize() + sumSizeFilesFrom);
-            //storageTo.setStorageSize(storageTo.getStorageSize() - sumSizeFilesFrom);
-            generalDAO.transferAll(fileListFrom, storageFrom, storageTo);
+            fileListFrom.clear();
+
+            File[] filesFrom = new File[fileListFrom.size()];
+            for (int i = 0; i != fileListFrom.size() ; i++) {
+                if (filesFrom[i] == null){
+                    filesFrom[i] = fileListFrom.get(i);
+                }
+            }
+
+            File[] filesTo = new File[fileListTo.size()];
+            for (int i = 0; i != fileListTo.size() ; i++) {
+                if (filesTo[i] == null){
+                    filesTo[i] = fileListTo.get(i);
+                }
+            }
+
+            storageTo.setFiles(filesTo);
+            storageFrom.setFiles(filesFrom);
+
+            generalDAO.transferAll(filesTo);
         }else {
             throw new Exception("Can not transfer files from storage " + storageFrom.getId());
         }
@@ -100,7 +116,7 @@ public class Controller {
     }
 
     private void validateTransferAll(List<File> filesFrom, List<File> filesTo, Storage storageTo)throws Exception{
-        if (!checkFreeSpaceInStorageTo(storageTo, filesFrom))
+        if (!checkFreeSpaceInStorageTo(filesFrom, filesTo, storageTo))
             throw new Exception("The amount of free space in the repository " + storageTo.getId() + " is less than the total size of the files for writing");
 
         if (!checkOnSameIdTransferAll(filesFrom, filesTo))
@@ -111,31 +127,42 @@ public class Controller {
     }
 
 
-    private boolean checkFreeSpaceInStorageTo(Storage storageTo, List<File> fileList){
+    private boolean checkFreeSpaceInStorageTo(List<File> fileListFrom, List<File> fileListTo, Storage storageTo){
 
-        long sumSizeFiles = 0;
-        for (File file : fileList){
-            sumSizeFiles += file.getSize();
+        long sumSizeFilesFrom = 0;
+        for (File file : fileListFrom){
+            if (file != null){
+                sumSizeFilesFrom += file.getSize();
+            }
         }
 
-        return storageTo.getStorageSize() >= sumSizeFiles;
+        long sumSizeFileTo = 0;
+        for (File file : fileListTo){
+            if (file != null){
+                sumSizeFileTo += file.getSize();
+            }
+        }
+
+        long freeSpace = storageTo.getStorageSize() - sumSizeFileTo;
+
+        return freeSpace >= sumSizeFilesFrom;
     }
 
     private boolean checkOnSameIdTransferAll(List<File> filesFrom, List<File> filesTo){
 
-        for (File file : filesFrom){
-            for (File file1 : filesTo){
-                if (file1.getId() == file.getId()){
-                    return false;
+        for (File fileFrom : filesFrom){
+            if (fileFrom != null){
+                for (File fileTo : filesTo){
+                    if (fileTo != null && fileTo.getId() == fileFrom.getId()){
+                        return false;
+                    }
                 }
             }
         }
         return true;
     }
 
-    private boolean checkFormatAll(List<File> files, Storage storageTo)throws Exception{
-        if (files == null || storageTo == null)
-            throw new Exception("Incoming data contains an error");
+    private boolean checkFormatAll(List<File> files, Storage storageTo){
 
         String[] formatsStorage = storageTo.getFormatSupported().split(",");
 
@@ -150,7 +177,9 @@ public class Controller {
         Set<String> fileFormats = new HashSet<>();
 
         for (File file : files){
-            fileFormats.add(file.getFormat());
+            if (file != null){
+                fileFormats.add(file.getFormat());
+            }
         }
 
         return storageFormats.containsAll(fileFormats);

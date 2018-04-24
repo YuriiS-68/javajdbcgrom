@@ -56,8 +56,8 @@ public class StorageDAO extends GeneralDAO<Storage>{
 
     public Storage findById(long id)throws Exception{
 
-        try(Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("SELECT S.STORAGE_ID, S.FORMAT_SUPPORTED, S.COUNTRY_STORAGE, S.SIZE_STORAGE, F.FILE_ID, " +
-                "F.STORAGE_ID, F.NAME_FILE, F.FORMAT_FILE, F.SIZE_FILE FROM STORAGE_ S JOIN FILE_ F ON S.STORAGE_ID = F.STORAGE_ID WHERE S.STORAGE_ID = ?")) {
+        try(Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
+                "SELECT * FROM STORAGE_ S, FILE_ F WHERE S.STORAGE_ID = F.STORAGE_ID_F AND S.STORAGE_ID = ?")) {
 
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -76,7 +76,12 @@ public class StorageDAO extends GeneralDAO<Storage>{
                 fileList.add(file);
             }
 
-            File[] files = fileList.toArray(new File[5]);
+            File[] files = new File[fileList.size()];
+            for (int i = 0; i != fileList.size() ; i++) {
+                if (files[i] == null){
+                    files[i] = fileList.get(i);
+                }
+            }
 
             storage.setFiles(files);
 
