@@ -1,6 +1,5 @@
 package jdbc_dz_lesson5_part1;
 
-import lesson5.HibernateUtils;
 import org.hibernate.Session;
 
 public class ProductRepository {

@@ -10,7 +10,7 @@ public class Demo {
 
         ProductRepository productRepository = new ProductRepository();
 
-        //productRepository.save(product);
+        productRepository.save(product);
         //productRepository.update(product);
         //productRepository.delete(product);
     }
