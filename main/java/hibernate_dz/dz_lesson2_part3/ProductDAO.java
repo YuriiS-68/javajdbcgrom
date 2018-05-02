@@ -7,8 +7,6 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.NativeQuery;
 
-import javax.persistence.Query;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 

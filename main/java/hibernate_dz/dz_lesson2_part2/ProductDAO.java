@@ -5,8 +5,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
-import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +17,6 @@ public class ProductDAO {
 
     public static Product findById(long id){
 
-        List products;
         Product product = new Product();
 
         Session session = null;
@@ -27,9 +26,10 @@ public class ProductDAO {
             tr = session.getTransaction();
             tr.begin();
 
+            List products;
             Query query = session.createQuery("from Product where ID = :idParam");
             query.setParameter("idParam", id);
-            products = ((org.hibernate.query.Query) query).list();
+            products = query.list();
 
             for (Object element : products) {
                 product = (Product) element;
@@ -56,22 +56,28 @@ public class ProductDAO {
         List<Product> products = new ArrayList<>();
 
         Session session = null;
+        Transaction tr = null;
         try {
             session = createSessionFactory().openSession();
+            tr = session.getTransaction();
+            tr.begin();
 
             List list;
             Query query = session.createQuery("from Product where NAME = :nameParam");
             query.setParameter("nameParam", name);
-            list = ((org.hibernate.query.Query) query).list();
+            list = query.list();
 
             for (Object element : list) {
                 Product product = (Product) element;
                 products.add(product);
             }
 
+            tr.commit();
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
+            if (tr != null)
+                tr.rollback();
         }finally {
             if (session != null){
                 session.close();
@@ -87,22 +93,28 @@ public class ProductDAO {
         List<Product> products = new ArrayList<>();
 
         Session session = null;
+        Transaction tr = null;
         try {
             session = createSessionFactory().openSession();
+            tr = session.getTransaction();
+            tr.begin();
 
             List list;
             Query query = session.createQuery("from Product where NAME like :nameParam");
             query.setParameter("nameParam", "%" + name + "%");
-            list = ((org.hibernate.query.Query) query).list();
+            list = query.list();
 
             for (Object element : list) {
                 Product product = (Product) element;
                 products.add(product);
             }
 
+            tr.commit();
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
+            if (tr != null)
+                tr.rollback();
         }finally {
             if (session != null){
                 session.close();
@@ -121,23 +133,29 @@ public class ProductDAO {
         int max = price + delta;
 
         Session session = null;
+        Transaction tr = null;
         try {
             session = createSessionFactory().openSession();
+            tr = session.getTransaction();
+            tr.begin();
 
             List list;
             Query query = session.createQuery("from Product where PRICE between :minParam and :maxParam");
             query.setParameter("minParam", min);
             query.setParameter("maxParam", max);
-            list = ((org.hibernate.query.Query) query).list();
+            list = query.list();
 
             for (Object element : list) {
                 Product product = (Product) element;
                 products.add(product);
             }
 
+            tr.commit();
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
+            if (tr != null)
+                tr.rollback();
         }finally {
             if (session != null){
                 session.close();
@@ -153,22 +171,27 @@ public class ProductDAO {
         List<Product> products = new LinkedList<>();
 
         Session session = null;
+        Transaction tr = null;
         try {
             session = createSessionFactory().openSession();
+            tr = session.getTransaction();
+            tr.begin();
 
             List list;
             Query query = session.createQuery("from Product order by NAME asc");
-
-            list = ((org.hibernate.query.Query) query).list();
+            list = query.list();
 
             for (Object element : list) {
                 Product product = (Product) element;
                 products.add(product);
             }
 
+            tr.commit();
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
+            if (tr != null)
+                tr.rollback();
         }finally {
             if (session != null){
                 session.close();
@@ -184,22 +207,27 @@ public class ProductDAO {
         List<Product> products = new LinkedList<>();
 
         Session session = null;
+        Transaction tr = null;
         try {
             session = createSessionFactory().openSession();
+            tr = session.getTransaction();
+            tr.begin();
 
             List list;
             Query query = session.createQuery("from Product order by NAME desc");
-
-            list = ((org.hibernate.query.Query) query).list();
+            list = query.list();
 
             for (Object element : list) {
                 Product product = (Product) element;
                 products.add(product);
             }
 
+            tr.commit();
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
+            if (tr != null)
+                tr.rollback();
         }finally {
             if (session != null){
                 session.close();
@@ -218,23 +246,29 @@ public class ProductDAO {
         int max = price + delta;
 
         Session session = null;
+        Transaction tr = null;
         try {
             session = createSessionFactory().openSession();
+            tr = session.getTransaction();
+            tr.begin();
 
             List list;
             Query query = session.createQuery("from Product where PRICE between :minParam and :maxParam order by PRICE desc");
             query.setParameter("minParam", min);
             query.setParameter("maxParam", max);
-            list = ((org.hibernate.query.Query) query).list();
+            list = query.list();
 
             for (Object element : list) {
                 Product product = (Product) element;
                 products.add(product);
             }
 
+            tr.commit();
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
+            if (tr != null)
+                tr.rollback();
         }finally {
             if (session != null){
                 session.close();
