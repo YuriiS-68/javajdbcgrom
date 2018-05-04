@@ -14,33 +14,26 @@ import java.util.List;
 public class ProductDAO {
 
     private static SessionFactory sessionFactory;
+    private static final String SQL1 = "FROM Product WHERE ID = :idParam";
 
     public static Product findById(long id){
 
         Product product = new Product();
 
         Session session = null;
-        Transaction tr = null;
         try {
             session = createSessionFactory().openSession();
-            tr = session.getTransaction();
+            Transaction tr = session.getTransaction();
             tr.begin();
 
-            List products;
-            Query query = session.createQuery("from Product where ID = :idParam");
+            Query query = session.createQuery(SQL1);
             query.setParameter("idParam", id);
-            products = query.list();
-
-            for (Object element : products) {
-                product = (Product) element;
-            }
+            product = (Product) query.uniqueResult();
 
             tr.commit();
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
-            if (tr != null)
-                tr.rollback();
         }finally {
             if (session != null){
                 session.close();
