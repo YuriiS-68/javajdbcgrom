@@ -1,5 +1,6 @@
 package hibernate_dz.dz_lesson2_part2;
 
+import hibernate.lesson1.Product;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -55,7 +56,7 @@ public class ProductDAO {
             tr = session.getTransaction();
             tr.begin();
 
-            List list;
+            List<Product> list;
             Query query = session.createQuery("from Product where NAME = :nameParam");
             query.setParameter("nameParam", name);
             list = query.list();

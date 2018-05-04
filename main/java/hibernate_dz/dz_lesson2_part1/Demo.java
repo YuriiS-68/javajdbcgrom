@@ -1,5 +1,7 @@
 package hibernate_dz.dz_lesson2_part1;
 
+import hibernate.lesson1.Product;
+
 import java.util.Arrays;
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package hibernate_dz.dz_lesson1;
 
+import hibernate.lesson1.Product;
 import org.hibernate.Session;
 
 public class ProductRepository {

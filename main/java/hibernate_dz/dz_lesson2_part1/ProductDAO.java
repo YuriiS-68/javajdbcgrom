@@ -1,13 +1,14 @@
 package hibernate_dz.dz_lesson2_part1;
 
-        import org.hibernate.HibernateException;
-        import org.hibernate.Session;
-        import org.hibernate.SessionFactory;
-        import org.hibernate.Transaction;
-        import org.hibernate.cfg.Configuration;
+import hibernate.lesson1.Product;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 
-        import javax.persistence.Query;
-        import java.util.List;
+import javax.persistence.Query;
+import java.util.List;
 
 public class ProductDAO {
 

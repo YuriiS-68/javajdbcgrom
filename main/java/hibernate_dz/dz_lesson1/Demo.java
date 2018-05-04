@@ -1,5 +1,7 @@
 package hibernate_dz.dz_lesson1;
 
+import hibernate.lesson1.Product;
+
 public class Demo {
     public static void main(String[] args) {
         Product product = new Product();

@@ -1,5 +1,6 @@
 package hibernate_dz.dz_lesson2_part3;
 
+import hibernate.lesson1.Product;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
