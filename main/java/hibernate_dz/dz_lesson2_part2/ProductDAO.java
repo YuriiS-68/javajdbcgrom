@@ -4,7 +4,6 @@ import hibernate.lesson1.Product;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
@@ -16,22 +15,26 @@ public class ProductDAO {
 
     private static SessionFactory sessionFactory;
     private static final String SQL1 = "FROM Product WHERE ID = :idParam";
+    private static final String SQL2 = "FROM Product WHERE NAME = :nameParam";
+    private static final String SQL3 = "FROM Product WHERE NAME LIKE :nameParam";
+    private static final String SQL4 = "FROM Product WHERE PRICE BETWEEN :minParam AND :maxParam";
+    private static final String SQL5 = "FROM Product ORDER BY NAME ASC";
+    private static final String SQL6 = "FROM Product ORDER BY NAME DESC";
+    private static final String SQL7 = "FROM Product WHERE PRICE BETWEEN :minParam AND :maxParam ORDER BY PRICE DESC";
 
     public static Product findById(long id){
 
         Product product = new Product();
 
         Session session = null;
+
         try {
             session = createSessionFactory().openSession();
-            Transaction tr = session.getTransaction();
-            tr.begin();
 
             Query query = session.createQuery(SQL1);
             query.setParameter("idParam", id);
             product = (Product) query.uniqueResult();
 
-            tr.commit();
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
@@ -45,33 +48,23 @@ public class ProductDAO {
         return product;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<Product> findByName(String name){
 
         List<Product> products = new ArrayList<>();
 
         Session session = null;
-        Transaction tr = null;
+
         try {
             session = createSessionFactory().openSession();
-            tr = session.getTransaction();
-            tr.begin();
 
-            List<Product> list;
-            Query query = session.createQuery("from Product where NAME = :nameParam");
+            Query query = session.createQuery(SQL2);
             query.setParameter("nameParam", name);
-            list = query.list();
+            products = query.list();
 
-            for (Object element : list) {
-                Product product = (Product) element;
-                products.add(product);
-            }
-
-            tr.commit();
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
-            if (tr != null)
-                tr.rollback();
         }finally {
             if (session != null){
                 session.close();
@@ -82,33 +75,23 @@ public class ProductDAO {
         return products;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<Product> findByContainedName(String name){
 
         List<Product> products = new ArrayList<>();
 
         Session session = null;
-        Transaction tr = null;
+
         try {
             session = createSessionFactory().openSession();
-            tr = session.getTransaction();
-            tr.begin();
 
-            List list;
-            Query query = session.createQuery("from Product where NAME like :nameParam");
+            Query query = session.createQuery(SQL3);
             query.setParameter("nameParam", "%" + name + "%");
-            list = query.list();
+            products = query.list();
 
-            for (Object element : list) {
-                Product product = (Product) element;
-                products.add(product);
-            }
-
-            tr.commit();
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
-            if (tr != null)
-                tr.rollback();
         }finally {
             if (session != null){
                 session.close();
@@ -119,6 +102,7 @@ public class ProductDAO {
         return products;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<Product> findByPrice(int price, int delta){
 
         List<Product> products = new ArrayList<>();
@@ -127,29 +111,18 @@ public class ProductDAO {
         int max = price + delta;
 
         Session session = null;
-        Transaction tr = null;
+
         try {
             session = createSessionFactory().openSession();
-            tr = session.getTransaction();
-            tr.begin();
 
-            List list;
-            Query query = session.createQuery("from Product where PRICE between :minParam and :maxParam");
+            Query query = session.createQuery(SQL4);
             query.setParameter("minParam", min);
             query.setParameter("maxParam", max);
-            list = query.list();
+            products = query.list();
 
-            for (Object element : list) {
-                Product product = (Product) element;
-                products.add(product);
-            }
-
-            tr.commit();
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
-            if (tr != null)
-                tr.rollback();
         }finally {
             if (session != null){
                 session.close();
@@ -160,32 +133,22 @@ public class ProductDAO {
         return products;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<Product> findByNameSortedAsc(){
 
         List<Product> products = new LinkedList<>();
 
         Session session = null;
-        Transaction tr = null;
+
         try {
             session = createSessionFactory().openSession();
-            tr = session.getTransaction();
-            tr.begin();
 
-            List list;
-            Query query = session.createQuery("from Product order by NAME asc");
-            list = query.list();
+            Query query = session.createQuery(SQL5);
+            products = query.list();
 
-            for (Object element : list) {
-                Product product = (Product) element;
-                products.add(product);
-            }
-
-            tr.commit();
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
-            if (tr != null)
-                tr.rollback();
         }finally {
             if (session != null){
                 session.close();
@@ -196,32 +159,22 @@ public class ProductDAO {
         return products;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<Product> findByNameSortedDesc(){
 
         List<Product> products = new LinkedList<>();
 
         Session session = null;
-        Transaction tr = null;
+
         try {
             session = createSessionFactory().openSession();
-            tr = session.getTransaction();
-            tr.begin();
 
-            List list;
-            Query query = session.createQuery("from Product order by NAME desc");
-            list = query.list();
+            Query query = session.createQuery(SQL6);
+            products = query.list();
 
-            for (Object element : list) {
-                Product product = (Product) element;
-                products.add(product);
-            }
-
-            tr.commit();
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
-            if (tr != null)
-                tr.rollback();
         }finally {
             if (session != null){
                 session.close();
@@ -232,6 +185,7 @@ public class ProductDAO {
         return products;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<Product> findByPriceSortedDesc(int price, int delta){
 
         List<Product> products = new ArrayList<>();
@@ -240,29 +194,18 @@ public class ProductDAO {
         int max = price + delta;
 
         Session session = null;
-        Transaction tr = null;
+
         try {
             session = createSessionFactory().openSession();
-            tr = session.getTransaction();
-            tr.begin();
 
-            List list;
-            Query query = session.createQuery("from Product where PRICE between :minParam and :maxParam order by PRICE desc");
+            Query query = session.createQuery(SQL7);
             query.setParameter("minParam", min);
             query.setParameter("maxParam", max);
-            list = query.list();
+            products = query.list();
 
-            for (Object element : list) {
-                Product product = (Product) element;
-                products.add(product);
-            }
-
-            tr.commit();
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
-            if (tr != null)
-                tr.rollback();
         }finally {
             if (session != null){
                 session.close();
