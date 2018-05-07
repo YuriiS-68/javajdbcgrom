@@ -24,12 +24,12 @@ public class ProductDAO {
     @SuppressWarnings("unchecked")
     public static Product findById(long id){
 
-        List<Product> products;
+        Product product;
 
         try (Session session = createSessionFactory().openSession()){
 
             NativeQuery query = session.createNativeQuery(SQL_GET_PRODUCT_BY_ID);
-            products = query.addEntity(Product.class).setParameter(1, id).list();
+            product = (Product) query.addEntity(Product.class).setParameter(1, id).getSingleResult();
 
         }catch (HibernateException e){
             System.err.println("Save is failed");
@@ -38,7 +38,7 @@ public class ProductDAO {
         }
         System.out.println("Save is done");
 
-        return products.get(0);
+        return product;
     }
 
     @SuppressWarnings("unchecked")
