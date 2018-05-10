@@ -16,9 +16,9 @@ public class ProductDAO {
 
     public static void main(String[] args) {
         Product product = new Product();
-        product.setName("table new!");
-        product.setDescription("grey & blue");
-        product.setPrice(70);
+        product.setName("Plate");
+        product.setDescription("red color");
+        product.setPrice(100);
 
         save(product);
 
@@ -37,9 +37,9 @@ public class ProductDAO {
         product3.setDescription("grey & blue");
         product3.setPrice(90);
 
-        List<Product> products = Arrays.asList(product1, product2, product3);
+        //List<Product> products = Arrays.asList(product1, product2, product3);
 
-        saveProducts(products);
+        //saveProducts(products);
     }
 
     public static void saveProducts(List<Product> products){

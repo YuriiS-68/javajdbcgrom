@@ -11,6 +11,8 @@
 
         <!--<property name="show_sql">true</property>-->
         <mapping class="hibernate.lesson1.Product"></mapping>
+        <mapping class="hibernate_dz.dz_lesson3.Hotel"></mapping>
+        <mapping class="hibernate_dz.dz_lesson3.Room"></mapping>
         <!--<mapping class="hibernate_dz.dz_lesson1.Product"></mapping>-->
         <!--<mapping class="hibernate.lesson2.Product"></mapping>-->
     </session-factory>

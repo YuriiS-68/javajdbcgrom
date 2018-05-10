@@ -1,9 +1,6 @@
 package hibernate.lesson1;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "PRODUCT")
@@ -14,6 +11,8 @@ public class Product {
     private int price;
 
     @Id
+    @SequenceGenerator(name = "PR_SQ", sequenceName = "PRODUCT_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PR_SQ")
     @Column(name = "ID")
     public long getId() {
         return id;
