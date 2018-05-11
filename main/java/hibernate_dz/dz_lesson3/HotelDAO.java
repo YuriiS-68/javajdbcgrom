@@ -11,8 +11,6 @@ import java.sql.SQLException;
 
 public class HotelDAO extends GeneralDAO<Hotel> {
 
-    private static final String SQL_GET_HOTEL_BY_ID = "FROM Hotel WHERE ID = :idParam";
-
     public static Hotel save(Hotel hotel){
 
         Session session = null;
@@ -40,7 +38,7 @@ public class HotelDAO extends GeneralDAO<Hotel> {
         return hotel;
     }
 
-    public void delete(long id)throws Exception {
+    public static void delete(long id)throws Exception {
         if (id == 0)
             throw new Exception("Incorrect data entered");
         //если у комнаты есть отель, просетить в таблице комнат, колонке ID_HOTEL значение null
@@ -75,12 +73,18 @@ public class HotelDAO extends GeneralDAO<Hotel> {
             throw e;
         }finally {
             if (connection != null){
+                connection.setAutoCommit(true);
                 connection.close();
             }
         }
     }
 
-    public static Hotel findById(long id)throws Exception{
+    public Hotel getHotel(long id)throws Exception{
+        setSQL("FROM Hotel WHERE ID = :idParam");
+        return findById(id);
+    }
+
+    /*public static Hotel findById(long id)throws Exception{
         if (id == 0)
             throw new Exception("Incorrect data entered");
 
@@ -101,5 +105,5 @@ public class HotelDAO extends GeneralDAO<Hotel> {
             throw e;
         }
         return hotel;
-    }
+    }*/
 }

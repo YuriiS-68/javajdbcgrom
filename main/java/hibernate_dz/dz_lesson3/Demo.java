@@ -5,27 +5,31 @@ import java.util.Date;
 public class Demo {
     public static void main(String[] args)throws Exception{
          GeneralDAO<Hotel> generalDAO = new GeneralDAO<>();
-         HotelDAO hotelDAO = new HotelDAO();
+         GeneralDAO<Room> roomGeneralDAO = new GeneralDAO<>();
+         RoomDAO roomDAO = new RoomDAO();
 
         Hotel hotel1 = new Hotel("NORD", "Ukraine", "Kiev", "Vokzalnaya");
-        Hotel hotel2 = new Hotel(180, "Vostok", "China", "Pekin", "Mao");
+        Hotel hotel2 = new Hotel(180, "Vostok777", "China", "Pekin", "Mao");
         Hotel hotel3 = new Hotel("Hilton", "Germany", "Berlin", "Ulrihshtrasse");
 
         //hotel1.setId(100);
         //hotel2.setId(110);
         //hotel3.setId(55);
-        Room room1 = new Room(53, 5, 250.0, 0, 0, new Date(), hotel1);
-        Room room2 = new Room(58, 1, 25.50, 0, 0, new Date(), hotel2);
-        Room room3 = new Room(54, 2, 40.0, 1, 1, new Date(), hotel1);
+        Room room1 = new Room(5, 250.0, 0, 0, new Date(), hotel1);
+        Room room2 = new Room(58, 1, 175.50, 1, 1, new Date(), hotel2);
+        Room room3 = new Room(2, 40.0, 1, 1, new Date(), hotel1);
         Room room4 = new Room(3, 50.0, 1, 1, new Date(), hotel3);
 
-        //HotelDAO.save(hotel3);
+        //HotelDAO.save(hotel1);
         //HotelDAO.update(hotel1);
-        //RoomDAO.save(room2);
-        hotelDAO.delete(190);
-        //RoomDAO.delete(57);
+        //roomDAO.save(room3);
+        //HotelDAO.delete(200);
+        //roomDAO.delete(59);
 
-        //generalDAO.update(hotel1);
+        generalDAO.update(hotel2);
+        //roomGeneralDAO.update(room2);
+
+        //System.out.println(room1);
 
     }
 }
