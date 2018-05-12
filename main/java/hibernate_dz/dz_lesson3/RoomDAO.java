@@ -3,15 +3,14 @@ package hibernate_dz.dz_lesson3;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
 public class RoomDAO extends GeneralDAO<Room> {
 
-    //private static final String SQL_GET_ROOM_BY_ID = "FROM Room WHERE ID = :idParam";
+    private HotelDAO hotelDAO = new HotelDAO();
+
+    private static final String SQL_GET_ROOM_BY_ID = "FROM Room WHERE ID = :idParam";
     //проверить что отель привязанный к комнате уже есть в базе
     //для этого надо сделать запрос в базу данных отелей (в таблицу HOTEL)
-
-    private HotelDAO hotelDAO = new HotelDAO();
 
     public Room save(Room room){
 
@@ -55,7 +54,7 @@ public class RoomDAO extends GeneralDAO<Room> {
             tr = session.getTransaction();
             tr.begin();
 
-            setSQL("FROM Room WHERE ID = :idParam");
+            setSQL(SQL_GET_ROOM_BY_ID);
             session.delete(findById(id));
 
             System.out.println("Recording deleted successfully");
