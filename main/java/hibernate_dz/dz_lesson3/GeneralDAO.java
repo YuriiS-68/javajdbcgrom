@@ -19,8 +19,6 @@ public class GeneralDAO<T> {
     private static final String USER = "main";
     private static final String PASS = "ifgjrkzr";
 
-    private String SQL;
-
     public T save(T t){
 
         Session session = null;
@@ -77,7 +75,7 @@ public class GeneralDAO<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public T findById(long id)throws Exception{
+    public T findById(long id, String sql)throws Exception{
         if (id == 0)
             throw new Exception("Incorrect data entered");
 
@@ -85,7 +83,7 @@ public class GeneralDAO<T> {
 
         try( Session session = createSessionFactory().openSession()) {
 
-            Query query = session.createQuery(SQL);
+            Query query = session.createQuery(sql);
             query.setParameter("idParam", id);
             if (query.uniqueResult() != null){
                 t = ( T )query.uniqueResult();
@@ -110,9 +108,4 @@ public class GeneralDAO<T> {
     public static Connection getConnection()throws SQLException {
         return DriverManager.getConnection(DB_URL, USER, PASS);
     }
-
-    public void setSQL(String SQL) {
-        this.SQL = SQL;
-    }
-
 }

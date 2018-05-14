@@ -1,9 +1,5 @@
 package hibernate_dz.dz_lesson3;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -14,33 +10,6 @@ public class HotelDAO extends GeneralDAO<Hotel> {
     private static final String SQL_UPDATE_ROOM = "UPDATE ROOM SET ID_HOTEL = ? WHERE ID_HOTEL = ?";
     private static final String SQL_DELETE_HOTEL = "DELETE FROM HOTEL WHERE ID = ?";
 
-    /*public static Hotel save(Hotel hotel){
-
-        Session session = null;
-        Transaction tr = null;
-        try {
-            session = createSessionFactory().openSession();
-            tr = session.getTransaction();
-            tr.begin();
-
-            session.save(hotel);
-
-            tr.commit();
-
-            System.out.println("Save is done");
-        }catch (HibernateException e){
-            System.err.println("Save is failed");
-            System.err.println(e.getMessage());
-            if (tr != null)
-                tr.rollback();
-        }finally {
-            if (session != null){
-                session.close();
-            }
-        }
-        return hotel;
-    }*/
-
     public static void delete(long id)throws Exception {
         if (id == 0)
             throw new Exception("Incorrect data entered");
@@ -48,8 +17,9 @@ public class HotelDAO extends GeneralDAO<Hotel> {
         //удалить отель
         //если комнат нет, удаляю отель
         Connection connection = getConnection();
+        PreparedStatement preparedStatement = null;
         try{
-            PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_ROOM);
+            preparedStatement = connection.prepareStatement(SQL_UPDATE_ROOM);
             connection.setAutoCommit(false);
 
             preparedStatement.setNull(1, java.sql.Types.NULL);
@@ -79,6 +49,10 @@ public class HotelDAO extends GeneralDAO<Hotel> {
                 connection.setAutoCommit(true);
                 connection.close();
             }
+
+            if (preparedStatement != null){
+                preparedStatement.close();
+            }
         }
     }
 
@@ -86,27 +60,6 @@ public class HotelDAO extends GeneralDAO<Hotel> {
         if (id == 0)
             throw new Exception("Incorrect data entered");
 
-        Hotel hotel;
-
-        try( Session session = createSessionFactory().openSession()) {
-
-            Query query = session.createQuery(SQL_GET_HOTEL_BY_ID);
-            query.setParameter("idParam", id);
-            if (query.uniqueResult() != null){
-                hotel = (Hotel) query.uniqueResult();
-            }else
-                throw new Exception("There is no object with id - " + id + " in the database");
-
-        }catch (HibernateException e){
-            System.err.println("Save is failed");
-            System.err.println(e.getMessage());
-            throw e;
-        }
-        return hotel;
+        return findById(id, SQL_GET_HOTEL_BY_ID);
     }
-
-    /*public Hotel getHotel(long id)throws Exception{
-        setSQL(SQL_GET_HOTEL_BY_ID);
-        return findById(id);
-    }*/
 }
