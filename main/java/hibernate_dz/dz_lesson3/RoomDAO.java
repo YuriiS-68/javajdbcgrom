@@ -3,16 +3,17 @@ package hibernate_dz.dz_lesson3;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 public class RoomDAO extends GeneralDAO<Room> {
 
-    private HotelDAO hotelDAO = new HotelDAO();
+    //private HotelDAO hotelDAO = new HotelDAO();
 
     private static final String SQL_GET_ROOM_BY_ID = "FROM Room WHERE ID = :idParam";
     //проверить что отель привязанный к комнате уже есть в базе
     //для этого надо сделать запрос в базу данных отелей (в таблицу HOTEL)
 
-    public Room save(Room room){
+    /*public Room save(Room room){
 
         Session session = null;
         Transaction tr = null;
@@ -41,7 +42,7 @@ public class RoomDAO extends GeneralDAO<Room> {
             }
         }
         return room;
-    }
+    }*/
 
     public void delete(long id) throws Exception{
         if (id == 0)
@@ -54,7 +55,7 @@ public class RoomDAO extends GeneralDAO<Room> {
             tr = session.getTransaction();
             tr.begin();
 
-            setSQL(SQL_GET_ROOM_BY_ID);
+            //setSQL(SQL_GET_ROOM_BY_ID);
             session.delete(findById(id));
 
             System.out.println("Recording deleted successfully");
@@ -70,5 +71,28 @@ public class RoomDAO extends GeneralDAO<Room> {
                 session.close();
             }
         }
+    }
+
+    private Room findById(long id)throws Exception{
+        if (id == 0)
+            throw new Exception("Incorrect data entered");
+
+        Room room;
+
+        try( Session session = createSessionFactory().openSession()) {
+
+            Query query = session.createQuery(SQL_GET_ROOM_BY_ID);
+            query.setParameter("idParam", id);
+            if (query.uniqueResult() != null){
+                room = (Room) query.uniqueResult();
+            }else
+                throw new Exception("There is no object with id - " + id + " in the database");
+
+        }catch (HibernateException e){
+            System.err.println("Save is failed");
+            System.err.println(e.getMessage());
+            throw e;
+        }
+        return room;
     }
 }

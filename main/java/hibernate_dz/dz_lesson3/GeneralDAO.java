@@ -21,6 +21,33 @@ public class GeneralDAO<T> {
 
     private String SQL;
 
+    public T save(T t){
+
+        Session session = null;
+        Transaction tr = null;
+        try {
+            session = createSessionFactory().openSession();
+            tr = session.getTransaction();
+            tr.begin();
+
+            session.save(t);
+
+            tr.commit();
+
+            System.out.println("Save is done");
+        }catch (HibernateException e){
+            System.err.println("Save is failed");
+            System.err.println(e.getMessage());
+            if (tr != null)
+                tr.rollback();
+        }finally {
+            if (session != null){
+                session.close();
+            }
+        }
+        return t;
+    }
+
     public void update(T t){
         if (t == null)
             throw new NullPointerException("Incorrect data entered");

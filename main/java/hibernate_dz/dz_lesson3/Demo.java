@@ -14,7 +14,7 @@ public class Demo {
 
         //hotel1.setId(100);
         //hotel2.setId(110);
-        //hotel3.setId(55);
+        hotel3.setId(300);
         Room room1 = new Room(5, 250.0, 0, 0, new Date(), hotel1);
         Room room2 = new Room(58, 1, 175.50, 1, 1, new Date(), hotel2);
         Room room3 = new Room(2, 40.0, 1, 1, new Date(), hotel1);
@@ -26,8 +26,11 @@ public class Demo {
         //HotelDAO.delete(200);
         //roomDAO.delete(59);
 
-        generalDAO.update(hotel2);
+        //generalDAO.update(hotel2);
         //roomGeneralDAO.update(room2);
+
+        roomGeneralDAO.save(room4);
+        //generalDAO.save(hotel3);
 
         //System.out.println(room1);
 

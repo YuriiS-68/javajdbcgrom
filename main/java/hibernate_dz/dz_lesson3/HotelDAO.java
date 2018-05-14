@@ -2,7 +2,7 @@ package hibernate_dz.dz_lesson3;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,7 +14,7 @@ public class HotelDAO extends GeneralDAO<Hotel> {
     private static final String SQL_UPDATE_ROOM = "UPDATE ROOM SET ID_HOTEL = ? WHERE ID_HOTEL = ?";
     private static final String SQL_DELETE_HOTEL = "DELETE FROM HOTEL WHERE ID = ?";
 
-    public static Hotel save(Hotel hotel){
+    /*public static Hotel save(Hotel hotel){
 
         Session session = null;
         Transaction tr = null;
@@ -39,7 +39,7 @@ public class HotelDAO extends GeneralDAO<Hotel> {
             }
         }
         return hotel;
-    }
+    }*/
 
     public static void delete(long id)throws Exception {
         if (id == 0)
@@ -82,8 +82,31 @@ public class HotelDAO extends GeneralDAO<Hotel> {
         }
     }
 
-    public Hotel getHotel(long id)throws Exception{
+    private Hotel findById(long id)throws Exception{
+        if (id == 0)
+            throw new Exception("Incorrect data entered");
+
+        Hotel hotel;
+
+        try( Session session = createSessionFactory().openSession()) {
+
+            Query query = session.createQuery(SQL_GET_HOTEL_BY_ID);
+            query.setParameter("idParam", id);
+            if (query.uniqueResult() != null){
+                hotel = (Hotel) query.uniqueResult();
+            }else
+                throw new Exception("There is no object with id - " + id + " in the database");
+
+        }catch (HibernateException e){
+            System.err.println("Save is failed");
+            System.err.println(e.getMessage());
+            throw e;
+        }
+        return hotel;
+    }
+
+    /*public Hotel getHotel(long id)throws Exception{
         setSQL(SQL_GET_HOTEL_BY_ID);
         return findById(id);
-    }
+    }*/
 }
