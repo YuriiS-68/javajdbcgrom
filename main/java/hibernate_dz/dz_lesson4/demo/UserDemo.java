@@ -14,18 +14,22 @@ public class UserDemo {
 
         Order order1 = new Order();
         Order order2 = new Order();
+        Order order3 = new Order();
 
         List<Order> orders1 = new LinkedList<>();
         orders1.add(order1);
         orders1.add(order2);
 
+        List<Order> orders2 = new LinkedList<>();
+        orders2.add(order3);
+
         User user1 = new User("User1", "12345", "Ukraine", "USER", orders1);
-        User user2 = new User("User2", "12345", "Italy", "USER");
+        User user2 = new User("User2", "12345", "Italy", "USER", orders2);
         User user3 = new User("User3", "98765", "Ukraine", "ADMIN");
         User user4 = new User("User4", "12345", "Germany", "USER");
         User user5 = new User("User5", "98765", "Germany", "ADMIN");
 
 
-        userGeneralDAO.save(user1);
+        userGeneralDAO.save(user3);
     }
 }

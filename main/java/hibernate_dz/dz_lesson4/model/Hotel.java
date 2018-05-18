@@ -11,7 +11,7 @@ public class Hotel {
     private String country;
     private String city;
     private String street;
-    private List rooms;
+    private List<Room> rooms;
 
     public Hotel() {
     }
@@ -44,8 +44,8 @@ public class Hotel {
         return street;
     }
 
-    @OneToMany(mappedBy = "ROOM", fetch = FetchType.LAZY)
-    public List getRooms() {
+    @OneToMany(targetEntity = Room.class, mappedBy = "hotel", fetch = FetchType.LAZY)
+    public List<Room> getRooms() {
         return rooms;
     }
 
@@ -69,7 +69,7 @@ public class Hotel {
         this.street = street;
     }
 
-    public void setRooms(List rooms) {
+    public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
     }
 

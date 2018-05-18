@@ -1,7 +1,5 @@
 package hibernate_dz.dz_lesson4.model;
 
-import hibernate_dz.dz_lesson4.model.Hotel;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -11,8 +9,8 @@ public class Room {
     private long id;
     private int numberOfGuests;
     private double price;
-    private boolean breakfastIncluded;
-    private boolean petsAllowed;
+    private int breakfastIncluded;
+    private int petsAllowed;
     private Date dateAvailableFrom;
     private Hotel hotel;
 
@@ -38,12 +36,12 @@ public class Room {
     }
 
     @Column(name = "BREAKFAST_INCLUDED")
-    public boolean isBreakfastIncluded() {
+    public int isBreakfastIncluded() {
         return breakfastIncluded;
     }
 
     @Column(name = "PETS_ALLOWED")
-    public boolean isPetsAllowed() {
+    public int isPetsAllowed() {
         return petsAllowed;
     }
 
@@ -53,7 +51,7 @@ public class Room {
         return dateAvailableFrom;
     }
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "ID_HOTEL")
     public Hotel getHotel() {
         return hotel;
@@ -71,11 +69,11 @@ public class Room {
         this.price = price;
     }
 
-    public void setBreakfastIncluded(boolean breakfastIncluded) {
+    public void setBreakfastIncluded(int breakfastIncluded) {
         this.breakfastIncluded = breakfastIncluded;
     }
 
-    public void setPetsAllowed(boolean petsAllowed) {
+    public void setPetsAllowed(int petsAllowed) {
         this.petsAllowed = petsAllowed;
     }
 
