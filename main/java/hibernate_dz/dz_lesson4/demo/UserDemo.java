@@ -1,6 +1,8 @@
 package hibernate_dz.dz_lesson4.demo;
 
 import hibernate_dz.dz_lesson4.dao.GeneralDAO;
+import hibernate_dz.dz_lesson4.dao.UserDAO;
+import hibernate_dz.dz_lesson4.exception.BadRequestException;
 import hibernate_dz.dz_lesson4.model.Order;
 import hibernate_dz.dz_lesson4.model.User;
 
@@ -8,13 +10,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class UserDemo {
-    public static void main(String[] args) {
+    public static void main(String[] args)throws BadRequestException {
 
-        GeneralDAO<User> userGeneralDAO = new GeneralDAO<>();
+        GeneralDAO<User> generalDAO = new GeneralDAO<>();
 
-        Order order1 = new Order();
-        Order order2 = new Order();
-        Order order3 = new Order();
+        UserDAO userDAO = new UserDAO();
+
+        Order order1 = new Order(50.0);
+        Order order2 = new Order(30.0);
+        Order order3 = new Order(35.0);
 
         List<Order> orders1 = new LinkedList<>();
         orders1.add(order1);
@@ -30,6 +34,20 @@ public class UserDemo {
         User user5 = new User("User5", "98765", "Germany", "ADMIN");
 
 
-        userGeneralDAO.save(user3);
+        //generalDAO.save(user3);
+
+        //System.out.println(UserDAO.getAllUser());
+
+        //user2.setId(2);
+
+        //userDAO.delete(2);
+        //userDAO.registerUser(user5);
+
+        //user5.setId(22);
+        //generalDAO.update(user5);
+
+
+
+
     }
 }

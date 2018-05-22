@@ -18,6 +18,18 @@ public class Order {
     public Order() {
     }
 
+    public Order(User user, Room room, Date dateFrom, Date dateTo, double moneyPaid) {
+        this.user = user;
+        this.room = room;
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
+        this.moneyPaid = moneyPaid;
+    }
+
+    public Order(double moneyPaid) {
+        this.moneyPaid = moneyPaid;
+    }
+
     @Id
     @SequenceGenerator(name = "ORDER_SQ", sequenceName = "ORDER_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ORDER_SQ")
@@ -32,25 +44,25 @@ public class Order {
         return user;
     }
 
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "ID_ROOM")
     public Room getRoom() {
         return room;
     }
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "DATE_FROM")
+    @Column(name = "DATE_FROM", nullable = false)
     public Date getDateFrom() {
         return dateFrom;
     }
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "DATE_TO")
+    @Column(name = "DATE_TO", nullable = false)
     public Date getDateTo() {
         return dateTo;
     }
 
-    @Column(name = "MONEY_PAID")
+    @Column(name = "MONEY_PAID", nullable = false)
     public double getMoneyPaid() {
         return moneyPaid;
     }

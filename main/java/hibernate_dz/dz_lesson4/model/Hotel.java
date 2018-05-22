@@ -16,6 +16,21 @@ public class Hotel {
     public Hotel() {
     }
 
+    public Hotel(String name, String country, String city, String street) {
+        this.name = name;
+        this.country = country;
+        this.city = city;
+        this.street = street;
+    }
+
+    public Hotel(String name, String country, String city, String street, List<Room> rooms) {
+        this.name = name;
+        this.country = country;
+        this.city = city;
+        this.street = street;
+        this.rooms = rooms;
+    }
+
     @Id
     @SequenceGenerator(name = "HT_SQ", sequenceName = "HOTEL_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "HT_SQ")
@@ -44,7 +59,8 @@ public class Hotel {
         return street;
     }
 
-    @OneToMany(targetEntity = Room.class, mappedBy = "hotel", fetch = FetchType.LAZY)
+    //@PersistenceContext(type = PersistenceContextType.EXTENDED)
+    @OneToMany(mappedBy = "hotel", fetch = FetchType.EAGER)
     public List<Room> getRooms() {
         return rooms;
     }

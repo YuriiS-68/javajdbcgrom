@@ -17,6 +17,15 @@ public class Room {
     public Room() {
     }
 
+    public Room(int numberOfGuests, double price, int breakfastIncluded, int petsAllowed, Date dateAvailableFrom, Hotel hotel) {
+        this.numberOfGuests = numberOfGuests;
+        this.price = price;
+        this.breakfastIncluded = breakfastIncluded;
+        this.petsAllowed = petsAllowed;
+        this.dateAvailableFrom = dateAvailableFrom;
+        this.hotel = hotel;
+    }
+
     @Id
     @SequenceGenerator(name = "RM_SQ", sequenceName = "ROOM_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RM_SQ")
@@ -51,7 +60,8 @@ public class Room {
         return dateAvailableFrom;
     }
 
-    @ManyToOne
+    //@PersistenceContext(type = PersistenceContextType.EXTENDED)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_HOTEL")
     public Hotel getHotel() {
         return hotel;
@@ -94,7 +104,7 @@ public class Room {
                 ", breakfastIncluded=" + breakfastIncluded +
                 ", petsAllowed=" + petsAllowed +
                 ", dateAvailableFrom=" + dateAvailableFrom +
-                ", hotel=" + hotel +
+                ", hotel=" + hotel.getId() +
                 '}';
     }
 }

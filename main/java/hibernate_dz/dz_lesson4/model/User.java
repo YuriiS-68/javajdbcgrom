@@ -40,22 +40,22 @@ public class User {
         return id;
     }
 
-    @Column(name = "USER_NAME")
+    @Column(name = "USER_NAME", nullable = false)
     public String getUserName() {
         return userName;
     }
 
-    @Column(name = "PASSWORD")
+    @Column(name = "PASSWORD", nullable = false)
     public String getPassword() {
         return password;
     }
 
-    @Column(name = "COUNTRY")
+    @Column(name = "COUNTRY", nullable = false)
     public String getCountry() {
         return country;
     }
 
-    @Column(name = "USER_TYPE")
+    @Column(name = "USER_TYPE", nullable = false)
     public String getUserType() {
         return userType;
     }
