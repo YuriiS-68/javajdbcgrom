@@ -1,13 +1,10 @@
 package hibernate_dz.dz_lesson4.dao;
 
-import hibernate_dz.dz_lesson4.exception.BadRequestException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,23 +21,10 @@ public class GeneralDAO<T> {
     private static final String USER = "main";
     private static final String PASS = "ifgjrkzr";
 
-    public static Connection getConnection()throws SQLException {
-        return DriverManager.getConnection(DB_URL, USER, PASS);
-    }
-
-    public static SessionFactory createSessionFactory(){
-        if (sessionFactory == null){
-            sessionFactory = new Configuration().configure().buildSessionFactory();
-        }
-        return sessionFactory;
-    }
-
     public T save(T t){
 
-        Session session = null;
         Transaction tr = null;
-        try {
-            session = createSessionFactory().openSession();
+        try(Session session = createSessionFactory().openSession()){
             tr = session.getTransaction();
             tr.begin();
 
@@ -53,10 +37,6 @@ public class GeneralDAO<T> {
             System.err.println(e.getMessage());
             if (tr != null)
                 tr.rollback();
-        }finally {
-            if (session != null){
-                session.close();
-            }
         }
         return t;
     }
@@ -79,6 +59,17 @@ public class GeneralDAO<T> {
             if (tr != null)
                 tr.rollback();
         }
+    }
+
+    public static Connection getConnection()throws SQLException {
+        return DriverManager.getConnection(DB_URL, USER, PASS);
+    }
+
+    public static SessionFactory createSessionFactory(){
+        if (sessionFactory == null){
+            sessionFactory = new Configuration().configure().buildSessionFactory();
+        }
+        return sessionFactory;
     }
 
     public static DateFormat getFORMAT() {

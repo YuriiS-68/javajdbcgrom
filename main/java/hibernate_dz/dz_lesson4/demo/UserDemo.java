@@ -32,16 +32,18 @@ public class UserDemo {
         User user3 = new User("User3", "98765", "Ukraine", "ADMIN");
         User user4 = new User("User4", "12345", "Germany", "USER");
         User user5 = new User("User5", "98765", "Germany", "ADMIN");
+        User user6 = new User("User6", "12345", "Germany", "USER");
+        User user7 = new User("User7", "password", "Germany", "USER");
 
-
-        //generalDAO.save(user3);
+        //user7.setId(233);
+        //generalDAO.save(user6);
 
         //System.out.println(UserDAO.getAllUser());
 
         //user2.setId(2);
 
         //userDAO.delete(2);
-        //userDAO.registerUser(user5);
+        userDAO.registerUser(user7);
 
         //user5.setId(22);
         //generalDAO.update(user5);

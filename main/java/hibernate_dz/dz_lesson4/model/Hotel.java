@@ -59,8 +59,7 @@ public class Hotel {
         return street;
     }
 
-    //@PersistenceContext(type = PersistenceContextType.EXTENDED)
-    @OneToMany(mappedBy = "hotel", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, targetEntity = Room.class)
     public List<Room> getRooms() {
         return rooms;
     }

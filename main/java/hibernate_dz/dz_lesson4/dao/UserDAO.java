@@ -7,21 +7,17 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
 
-import java.util.List;
-
 public class UserDAO extends GeneralDAO<User> {
 
-    private static final String SQL_GET_ALL_USER = "SELECT * FROM USER_";
     private static final String SQL_GET_USER_BY_ID = "SELECT * FROM USER_ WHERE ID = :idParam";
 
     public User registerUser(User user)throws BadRequestException{
-        if (user == null)
-            throw new NullPointerException("Incorrect data entered");
 
-        if (!checkUser(user))
-            throw new BadRequestException("This user " + user + " already exist in data base");
-
-        save(user);
+        if (user.getId() == 0){
+            save(user);
+        }
+        else
+            throw new BadRequestException("User with id -  " + user.getId() + " can`t be registered in the database");
 
         return user;
     }
@@ -64,49 +60,4 @@ public class UserDAO extends GeneralDAO<User> {
         }
         return user;
     }
-
-
-    @SuppressWarnings("unchecked")
-    private static List<User> getAllUser(){
-        List<User> users;
-
-        try (Session session = createSessionFactory().openSession()){
-
-            NativeQuery query = session.createNativeQuery(SQL_GET_ALL_USER);
-            users = query.addEntity(User.class).list();
-
-        }catch (HibernateException e){
-            System.err.println("Save is failed");
-            System.err.println(e.getMessage());
-            throw e;
-        }
-        return users;
-    }
-
-    private boolean checkUser(User user){
-        for (User element : getAllUser()){
-            if (element.equals(user)){
-                return false;
-            }
-        }
-        return true;
-    }
 }
-
-/*private User findById(long id)throws BadRequestException{
-        User user;
-        try( Session session = createSessionFactory().openSession()){
-
-            NativeQuery<User> query = session.createNativeQuery(SQL_GET_USER_BY_ID);
-            query.setParameter("idParam", id);
-            if (query.uniqueResult() != null){
-                user = query.addEntity(User.class).uniqueResult();
-            }else
-                throw new BadRequestException("There is no object with id - " + id + " in the database");
-
-        }catch (HibernateException e){
-            System.err.println("Save is failed");
-            System.err.println(e.getMessage());
-            throw e;
-        }
-      }*/

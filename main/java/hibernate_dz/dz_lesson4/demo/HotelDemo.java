@@ -19,8 +19,8 @@ public class HotelDemo {
 
         //hotelDAO.delete(25);
 
-        //System.out.println(hotelDAO.findHotelByName("SPUTNIK"));
+        System.out.println(hotelDAO.findHotelByName("SPUTNIK"));
 
-        System.out.println(hotelDAO.findHotelByCity("London"));
+        //System.out.println(hotelDAO.findHotelByCity("London"));
     }
 }

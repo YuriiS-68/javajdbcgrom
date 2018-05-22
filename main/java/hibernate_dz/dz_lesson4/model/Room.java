@@ -60,8 +60,7 @@ public class Room {
         return dateAvailableFrom;
     }
 
-    //@PersistenceContext(type = PersistenceContextType.EXTENDED)
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_HOTEL")
     public Hotel getHotel() {
         return hotel;

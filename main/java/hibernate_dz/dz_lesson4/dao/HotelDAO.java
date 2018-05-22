@@ -7,25 +7,29 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
 
-import java.util.List;
-
 public class HotelDAO extends GeneralDAO<Hotel> {
 
-    private static final String SQL_GET_ALL_HOTEL = "SELECT * FROM HOTEL";
     private static final String SQL_GET_HOTEL_BY_ID = "SELECT * FROM HOTEL WHERE ID = :idParam";
+    private static final String SQL_GET_HOTEL_BY_NAME = "SELECT * FROM HOTEL WHERE NAME = :idParam";
+    private static final String SQL_GET_HOTEL_BY_CITY = "SELECT * FROM HOTEL WHERE CITY = :idParam";
 
+    @SuppressWarnings("unchecked")
     public Hotel findHotelByName(String name)throws BadRequestException{
 
-        Hotel hotel = new Hotel();
+        Hotel hotel;
+        try( Session session = createSessionFactory().openSession()){
 
-        for (Hotel element : getAllHotel()){
-            if (element.getName().equals(name)){
-                hotel = element;
-            }
+            NativeQuery<Hotel> query = session.createNativeQuery(SQL_GET_HOTEL_BY_NAME).setParameter("idParam", name);
+            if (query.uniqueResult() != null){
+                hotel = query.addEntity(Hotel.class).uniqueResult();
+            }else
+                throw new BadRequestException("There is no hotel with name - " + name + " in the database");
+
+        }catch (HibernateException e){
+            System.err.println("Save is failed");
+            System.err.println(e.getMessage());
+            throw e;
         }
-
-        if (hotel.getId() == 0)
-            throw new BadRequestException("This hotel " + name + " is not in the database");
 
         return hotel;
     }
@@ -34,11 +38,7 @@ public class HotelDAO extends GeneralDAO<Hotel> {
 
         Hotel hotel = new Hotel();
 
-        for (Hotel element : getAllHotel()){
-            if (element.getCity().equals(city)){
-                hotel = element;
-            }
-        }
+
 
         if (hotel.getId() == 0)
             throw new BadRequestException("Hotel from the " + city + " is not in the database");
@@ -83,23 +83,5 @@ public class HotelDAO extends GeneralDAO<Hotel> {
             throw e;
         }
         return hotel;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static List<Hotel> getAllHotel(){
-
-        List<Hotel> hotels;
-
-        try (Session session = createSessionFactory().openSession()){
-
-            NativeQuery query = session.createNativeQuery(SQL_GET_ALL_HOTEL);
-            hotels = query.addEntity(Hotel.class).list();
-
-        }catch (HibernateException e){
-            System.err.println("Save is failed");
-            System.err.println(e.getMessage());
-            throw e;
-        }
-        return hotels;
     }
 }
