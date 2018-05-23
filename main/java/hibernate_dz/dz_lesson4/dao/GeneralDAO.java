@@ -1,14 +1,14 @@
 package hibernate_dz.dz_lesson4.dao;
 
+import hibernate_dz.dz_lesson4.exception.BadRequestException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.NativeQuery;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -59,6 +59,36 @@ public class GeneralDAO<T> {
             if (tr != null)
                 tr.rollback();
         }
+    }
+
+    public T findById(long id, String sql, Connection connection)throws SQLException{
+
+        T t = null;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            connection.setAutoCommit(false);
+
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            int count = resultSet.getMetaData().getColumnCount();
+
+
+
+            connection.commit();
+        }catch (SQLException e){
+            connection.rollback();
+            System.err.println("Save is failed");
+            System.err.println(e.getMessage());
+            throw e;
+        }finally {
+            if (connection != null){
+                connection.setAutoCommit(true);
+                connection.close();
+            }
+        }
+
+        return t;
     }
 
     public static Connection getConnection()throws SQLException {

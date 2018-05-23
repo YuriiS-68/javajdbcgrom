@@ -10,6 +10,7 @@ import org.hibernate.query.NativeQuery;
 public class UserDAO extends GeneralDAO<User> {
 
     private static final String SQL_GET_USER_BY_ID = "SELECT * FROM USER_ WHERE ID = :idParam";
+    private static final String SQL_FIND_BY_ID = "SELECT * FROM USER_ WHERE ID = ?";
 
     public User registerUser(User user)throws BadRequestException{
 

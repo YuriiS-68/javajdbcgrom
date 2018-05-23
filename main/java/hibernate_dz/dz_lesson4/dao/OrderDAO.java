@@ -7,6 +7,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 
 import java.util.Date;
 
@@ -23,8 +24,27 @@ public class OrderDAO extends GeneralDAO<Order> {
         save(createOrder(roomId, userId));
     }
 
+    @SuppressWarnings("unchecked")
     public void cancelReservation(long roomId, long userId){
 
+        Transaction tr = null;
+        try(Session session = createSessionFactory().openSession()){
+            tr = session.getTransaction();
+            tr.begin();
+
+            Query<Order> query = session.createQuery("DELETE FROM Order_ WHERE ID_USER = :idParam AND ID_ROOM = :idParam");
+            query.setParameter("idParam", userId).setParameter("idParam", roomId);
+            query.executeUpdate();
+
+            tr.commit();
+        }catch (HibernateException e){
+            System.err.println("Save is failed");
+            System.err.println(e.getMessage());
+            if (tr != null)
+                tr.rollback();
+
+            throw e;
+        }
     }
 
     public void delete(long id)throws BadRequestException{

@@ -29,14 +29,14 @@ public class OrderDemo {
         Hotel hotel1 = new Hotel("HILTON", "England", "London", "street 17");
         Hotel hotel2 = new Hotel("SPUTNIK", "Ukraine", "Kiev", "Vasilkovskaya");
 
-        hotel1.setId(25);
+        hotel1.setId(29);
         Room room1 = new Room(2, 50.0, 1, 0, format.parse(date), hotel1);
         Room room2 = new Room(4, 180.0, 1, 1, format.parse(date2), hotel1);
 
-        user1.setId(1);
-        room1.setId(18);
+        user2.setId(23);
+        room1.setId(22);
         //Order order1 = new Order(user1, room1, format.parse(dateFrom), format.parse(dateTo), 200.00);
 
-        orderDAO.bookRoom(1, 18, 25);
+        orderDAO.bookRoom(22, 23, 29);
     }
 }

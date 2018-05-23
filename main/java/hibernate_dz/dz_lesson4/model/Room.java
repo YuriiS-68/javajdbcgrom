@@ -60,7 +60,7 @@ public class Room {
         return dateAvailableFrom;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_HOTEL")
     public Hotel getHotel() {
         return hotel;

@@ -20,6 +20,7 @@ public class RoomDemo {
         String date2 = "12.05.2018";
         String date3 = "13.05.2018";
         String date4 = "14.05.2018";
+        String date5 = "23.05.2018";
 
         Hotel hotel1 = new Hotel("HILTON", "England", "London", "street 17");
         Hotel hotel2 = new Hotel("SPUTNIK", "Ukraine", "Kiev", "Vasilkovskaya");
@@ -32,17 +33,19 @@ public class RoomDemo {
         Room room2 = new Room(4, 180.0, 1, 1, format.parse(date2), hotel1);
         Room room3 = new Room(1, 50.0, 0, 1, format.parse(date3), hotel3);
         Room room4 = new Room(3, 175.0, 1, 1, format.parse(date), hotel2);
+        Room room5 = new Room(6, 350.0, 1, 1, format.parse(date5), hotel2);
 
         Filter filter = new Filter(0, 50.0, 1, 0, format.parse(date4), "England", "London");
         Filter filter1 = new Filter(50.0, "England");
         Filter filter2 = new Filter(50.0);
 
-        System.out.println(roomDAO.findRooms(filter1));
+        //System.out.println(roomDAO.findRooms(filter1));
 
-        //generalDAO.save(room2);
+        room5.setId(26);
+        generalDAO.save(room5);
         //generalDAO.save(room3);
 
-        //roomDAO.delete(19);
+        //roomDAO.delete(25);
         //roomDAO.delete(20);
     }
 }

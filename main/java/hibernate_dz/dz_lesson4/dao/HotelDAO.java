@@ -2,10 +2,13 @@ package hibernate_dz.dz_lesson4.dao;
 
 import hibernate_dz.dz_lesson4.exception.BadRequestException;
 import hibernate_dz.dz_lesson4.model.Hotel;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
+
+import java.util.List;
 
 public class HotelDAO extends GeneralDAO<Hotel> {
 
@@ -14,16 +17,23 @@ public class HotelDAO extends GeneralDAO<Hotel> {
     private static final String SQL_GET_HOTEL_BY_CITY = "SELECT * FROM HOTEL WHERE CITY = :idParam";
 
     @SuppressWarnings("unchecked")
-    public Hotel findHotelByName(String name)throws BadRequestException{
+    public List<Hotel> findHotelByName(String name){
 
-        Hotel hotel;
+        List<Hotel> hotels;
+
         try( Session session = createSessionFactory().openSession()){
 
             NativeQuery<Hotel> query = session.createNativeQuery(SQL_GET_HOTEL_BY_NAME).setParameter("idParam", name);
-            if (query.uniqueResult() != null){
-                hotel = query.addEntity(Hotel.class).uniqueResult();
-            }else
-                throw new BadRequestException("There is no hotel with name - " + name + " in the database");
+            hotels = query.list();
+
+            //for (Hotel hotel : hotels){
+            //    Hibernate.initialize(hotel.getRooms());
+            //}
+            //hotels = session.get(Hotel.class, hotel.getId());
+
+            //if (hotel != null){
+            //    Hibernate.initialize(hotel.getRooms());
+            //}
 
         }catch (HibernateException e){
             System.err.println("Save is failed");
@@ -31,7 +41,7 @@ public class HotelDAO extends GeneralDAO<Hotel> {
             throw e;
         }
 
-        return hotel;
+        return hotels;
     }
 
     @SuppressWarnings("unchecked")

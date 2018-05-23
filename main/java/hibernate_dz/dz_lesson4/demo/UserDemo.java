@@ -6,11 +6,12 @@ import hibernate_dz.dz_lesson4.exception.BadRequestException;
 import hibernate_dz.dz_lesson4.model.Order;
 import hibernate_dz.dz_lesson4.model.User;
 
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
 public class UserDemo {
-    public static void main(String[] args)throws BadRequestException {
+    public static void main(String[] args)throws SQLException {
 
         GeneralDAO<User> generalDAO = new GeneralDAO<>();
 
@@ -43,7 +44,7 @@ public class UserDemo {
         //user2.setId(2);
 
         //userDAO.delete(2);
-        userDAO.registerUser(user7);
+        //userDAO.registerUser(user7);
 
         //user5.setId(22);
         //generalDAO.update(user5);
