@@ -39,22 +39,22 @@ public class Hotel {
         return id;
     }
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", nullable = false)
     public String getName() {
         return name;
     }
 
-    @Column(name = "COUNTRY")
+    @Column(name = "COUNTRY", nullable = false)
     public String getCountry() {
         return country;
     }
 
-    @Column(name = "CITY")
+    @Column(name = "CITY", nullable = false)
     public String getCity() {
         return city;
     }
 
-    @Column(name = "STREET")
+    @Column(name = "STREET", nullable = false)
     public String getStreet() {
         return street;
     }

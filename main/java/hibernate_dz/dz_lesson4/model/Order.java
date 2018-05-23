@@ -38,7 +38,7 @@ public class Order {
         return id;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_USER")
     public User getUser() {
         return user;

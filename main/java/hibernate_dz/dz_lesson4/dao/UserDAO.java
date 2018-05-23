@@ -42,7 +42,7 @@ public class UserDAO extends GeneralDAO<User> {
     }
 
     @SuppressWarnings("unchecked")
-    private User findById(long id)throws BadRequestException{
+    public static User findById(long id)throws BadRequestException{
         User user;
         try( Session session = createSessionFactory().openSession()){
 

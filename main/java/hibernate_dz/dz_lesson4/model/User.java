@@ -60,7 +60,7 @@ public class User {
         return userType;
     }
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, targetEntity = Order.class)
     public List<Order> getOrders() {
         return orders;
     }

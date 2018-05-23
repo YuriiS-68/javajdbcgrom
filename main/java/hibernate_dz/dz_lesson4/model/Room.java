@@ -34,28 +34,28 @@ public class Room {
         return id;
     }
 
-    @Column(name = "NUMBER_OF_GUESTS")
+    @Column(name = "NUMBER_OF_GUESTS", nullable = false)
     public int getNumberOfGuests() {
         return numberOfGuests;
     }
 
-    @Column(name = "PRICE")
+    @Column(name = "PRICE", nullable = false)
     public double getPrice() {
         return price;
     }
 
-    @Column(name = "BREAKFAST_INCLUDED")
+    @Column(name = "BREAKFAST_INCLUDED", nullable = false)
     public int isBreakfastIncluded() {
         return breakfastIncluded;
     }
 
-    @Column(name = "PETS_ALLOWED")
+    @Column(name = "PETS_ALLOWED", nullable = false)
     public int isPetsAllowed() {
         return petsAllowed;
     }
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "DATE_AVAILABLE_FROM")
+    @Column(name = "DATE_AVAILABLE_FROM", nullable = false)
     public Date getDateAvailableFrom() {
         return dateAvailableFrom;
     }
@@ -103,7 +103,7 @@ public class Room {
                 ", breakfastIncluded=" + breakfastIncluded +
                 ", petsAllowed=" + petsAllowed +
                 ", dateAvailableFrom=" + dateAvailableFrom +
-                ", hotel=" + hotel.getId() +
+                ", hotel=" + hotel +
                 '}';
     }
 }

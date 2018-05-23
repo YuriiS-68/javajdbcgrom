@@ -34,14 +34,23 @@ public class HotelDAO extends GeneralDAO<Hotel> {
         return hotel;
     }
 
+    @SuppressWarnings("unchecked")
     public Hotel findHotelByCity(String city)throws BadRequestException{
 
-        Hotel hotel = new Hotel();
+        Hotel hotel;
+        try( Session session = createSessionFactory().openSession()){
 
+            NativeQuery<Hotel> query = session.createNativeQuery(SQL_GET_HOTEL_BY_CITY).setParameter("idParam", city);
+            if (query.uniqueResult() != null){
+                hotel = query.addEntity(Hotel.class).uniqueResult();
+            }else
+                throw new BadRequestException("There is no hotel from city - " + city + " in the database");
 
-
-        if (hotel.getId() == 0)
-            throw new BadRequestException("Hotel from the " + city + " is not in the database");
+        }catch (HibernateException e){
+            System.err.println("Save is failed");
+            System.err.println(e.getMessage());
+            throw e;
+        }
 
         return hotel;
     }
@@ -66,7 +75,7 @@ public class HotelDAO extends GeneralDAO<Hotel> {
     }
 
     @SuppressWarnings("unchecked")
-    private Hotel findById(long id)throws BadRequestException{
+    public static Hotel findById(long id)throws BadRequestException{
         Hotel hotel;
         try( Session session = createSessionFactory().openSession()){
 

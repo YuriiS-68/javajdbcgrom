@@ -19,9 +19,7 @@ public class RoomDAO extends GeneralDAO<Room> {
     private static final String SQL_GET_ALL_ROOM_AND_HOTEL = "SELECT * FROM ROOM, HOTEL WHERE HOTEL.ID = ROOM.ID_HOTEL";
 
 
-    public Collection<Room> findRooms(Filter filter)throws Exception{
-        if (filter == null)
-            throw new NullPointerException("Incorrect data entered");
+    public Collection<Room> findRooms(Filter filter){
 
         List<Room> foundRooms = new LinkedList<>();
 
@@ -29,6 +27,9 @@ public class RoomDAO extends GeneralDAO<Room> {
         try(Session session = createSessionFactory().openSession()){
             tr = session.getTransaction();
             tr.begin();
+
+
+
         }
 
 
@@ -55,14 +56,14 @@ public class RoomDAO extends GeneralDAO<Room> {
     }
 
     @SuppressWarnings("unchecked")
-    private Room findById(long id)throws BadRequestException{
-        Room hotel;
+    public static Room findById(long id)throws BadRequestException{
+        Room room;
         try( Session session = createSessionFactory().openSession()){
 
             NativeQuery<Room> query = session.createNativeQuery(SQL_GET_ROOM_BY_ID);
             query.setParameter("idParam", id);
             if (query.uniqueResult() != null){
-                hotel = query.addEntity(Room.class).uniqueResult();
+                room = query.addEntity(Room.class).uniqueResult();
             }else
                 throw new BadRequestException("There is no object with id - " + id + " in the database");
 
@@ -71,25 +72,7 @@ public class RoomDAO extends GeneralDAO<Room> {
             System.err.println(e.getMessage());
             throw e;
         }
-        return hotel;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static List<Room> getAllRoom(){
-
-        List<Room> rooms;
-
-        try (Session session = createSessionFactory().openSession()){
-
-            NativeQuery query = session.createNativeQuery(SQL_GET_ALL_ROOM);
-            rooms = query.addEntity(Room.class).list();
-
-        }catch (HibernateException e){
-            System.err.println("Save is failed");
-            System.err.println(e.getMessage());
-            throw e;
-        }
-        return rooms;
+        return room;
     }
 
     private static boolean filterCheck(Room room, Filter filter)throws Exception{
