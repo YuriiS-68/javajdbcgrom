@@ -54,10 +54,16 @@ public class OrderDAO extends GeneralDAO<Order> {
             tr = session.getTransaction();
             tr.begin();
 
-            session.delete(findById(id));
+            if (findById(id) != null){
+                session.delete(findById(id));
 
-            System.out.println("Recording deleted successfully");
-            tr.commit();
+                System.out.println("Recording deleted successfully");
+
+                tr.commit();
+            }
+            else
+                throw new BadRequestException("Object with id " + id + " in the database not found.");
+
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
@@ -112,16 +118,14 @@ public class OrderDAO extends GeneralDAO<Order> {
     }
 
     @SuppressWarnings("unchecked")
-    private static Order findById(long id)throws BadRequestException {
+    private static Order findById(long id){
         Order order;
         try (Session session = createSessionFactory().openSession()) {
 
             NativeQuery<Order> query = session.createNativeQuery(SQL_GET_ORDER_BY_ID);
             query.setParameter("idParam", id);
-            if (query.uniqueResult() != null) {
-                order = query.addEntity(Room.class).uniqueResult();
-            } else
-                throw new BadRequestException("There is no object with id - " + id + " in the database");
+
+            order = query.addEntity(Room.class).uniqueResult();
 
         } catch (HibernateException e) {
             System.err.println("Save is failed");

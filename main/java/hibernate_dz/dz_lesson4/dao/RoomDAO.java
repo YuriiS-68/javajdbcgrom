@@ -32,7 +32,6 @@ public class RoomDAO extends GeneralDAO<Room> {
 
         }
 
-
         return foundRooms;
     }
 
@@ -43,10 +42,16 @@ public class RoomDAO extends GeneralDAO<Room> {
             tr = session.getTransaction();
             tr.begin();
 
-            session.delete(findById(id));
+            if (findById(id) != null){
+                session.delete(findById(id));
 
-            System.out.println("Recording deleted successfully");
-            tr.commit();
+                System.out.println("Recording deleted successfully");
+
+                tr.commit();
+            }
+            else
+                throw new BadRequestException("Object with id " + id + " in the database not found.");
+
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
@@ -56,16 +61,14 @@ public class RoomDAO extends GeneralDAO<Room> {
     }
 
     @SuppressWarnings("unchecked")
-    public static Room findById(long id)throws BadRequestException{
+    public static Room findById(long id){
         Room room;
         try( Session session = createSessionFactory().openSession()){
 
             NativeQuery<Room> query = session.createNativeQuery(SQL_GET_ROOM_BY_ID);
             query.setParameter("idParam", id);
-            if (query.uniqueResult() != null){
-                room = query.addEntity(Room.class).uniqueResult();
-            }else
-                throw new BadRequestException("There is no object with id - " + id + " in the database");
+
+            room = query.addEntity(Room.class).uniqueResult();
 
         }catch (HibernateException e){
             System.err.println("Save is failed");

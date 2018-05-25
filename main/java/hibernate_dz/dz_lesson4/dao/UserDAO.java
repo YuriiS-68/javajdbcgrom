@@ -26,14 +26,20 @@ public class UserDAO extends GeneralDAO<User> {
     public void delete(long id)throws BadRequestException{
 
         Transaction tr = null;
-        try (Session session = createSessionFactory().openSession();){
+        try (Session session = createSessionFactory().openSession()){
             tr = session.getTransaction();
             tr.begin();
 
-            session.delete(findById(id));
+            if (findById(id) != null){
+                session.delete(findById(id));
 
-            System.out.println("Recording deleted successfully");
-            tr.commit();
+                System.out.println("Recording deleted successfully");
+
+                tr.commit();
+            }
+            else
+                throw new BadRequestException("Object with id " + id + " in the database not found.");
+
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
@@ -43,16 +49,14 @@ public class UserDAO extends GeneralDAO<User> {
     }
 
     @SuppressWarnings("unchecked")
-    public static User findById(long id)throws BadRequestException{
+    public static User findById(long id){
         User user;
         try( Session session = createSessionFactory().openSession()){
 
             NativeQuery<User> query = session.createNativeQuery(SQL_GET_USER_BY_ID);
             query.setParameter("idParam", id);
-            if (query.uniqueResult() != null){
-                user = query.addEntity(User.class).uniqueResult();
-            }else
-                throw new BadRequestException("There is no object with id - " + id + " in the database");
+
+            user = query.addEntity(User.class).uniqueResult();
 
         }catch (HibernateException e){
             System.err.println("Save is failed");

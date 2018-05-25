@@ -6,7 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 
 import java.sql.*;
 import java.text.DateFormat;
@@ -61,7 +61,7 @@ public class GeneralDAO<T> {
         }
     }
 
-    public T findById(long id, String sql, Connection connection)throws SQLException{
+    /*public T findById(long id, String sql, Connection connection)throws SQLException{
 
         T t = null;
 
@@ -72,6 +72,12 @@ public class GeneralDAO<T> {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             int count = resultSet.getMetaData().getColumnCount();
+
+            if (count == 5){
+                while (resultSet.next()){
+                    t =
+                }
+            }
 
 
 
@@ -89,7 +95,7 @@ public class GeneralDAO<T> {
         }
 
         return t;
-    }
+    }*/
 
     public static Connection getConnection()throws SQLException {
         return DriverManager.getConnection(DB_URL, USER, PASS);

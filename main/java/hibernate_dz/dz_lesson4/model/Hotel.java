@@ -95,8 +95,7 @@ public class Hotel {
                 ", name='" + name + '\'' +
                 ", country='" + country + '\'' +
                 ", city='" + city + '\'' +
-                ", street='" + street + '\'' +
-                ", rooms=" + rooms +
+                ", street='" + street +
                 '}';
     }
 }

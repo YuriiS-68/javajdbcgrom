@@ -2,67 +2,77 @@ package hibernate_dz.dz_lesson4.dao;
 
 import hibernate_dz.dz_lesson4.exception.BadRequestException;
 import hibernate_dz.dz_lesson4.model.Hotel;
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 
 import java.util.List;
 
 public class HotelDAO extends GeneralDAO<Hotel> {
 
     private static final String SQL_GET_HOTEL_BY_ID = "SELECT * FROM HOTEL WHERE ID = :idParam";
-    private static final String SQL_GET_HOTEL_BY_NAME = "SELECT * FROM HOTEL WHERE NAME = :idParam";
+    private static final String SQL_GET_HOTEL_BY_NAME_NATIVE = "SELECT * FROM HOTEL WHERE NAME = :nameParam";
     private static final String SQL_GET_HOTEL_BY_CITY = "SELECT * FROM HOTEL WHERE CITY = :idParam";
+    private static final String SQL_GET_HOTEL_BY_NAME = "FROM Hotel WHERE NAME = :nameParam";
+
+    @SuppressWarnings("unchecked")
+    public List<Hotel> findHotelByNameWithNative(String name){
+
+        try( Session session = createSessionFactory().openSession()){
+
+            NativeQuery<Hotel> query = session.createNativeQuery(SQL_GET_HOTEL_BY_NAME_NATIVE, Hotel.class).setParameter("nameParam", name);
+            List<Hotel> hotels = query.list();
+
+            for (Hotel hotel : hotels){
+                System.out.println(hotel.getRooms());
+            }
+
+            return query.list();
+
+        }catch (HibernateException e){
+            System.err.println("Save is failed");
+            System.err.println(e.getMessage());
+            throw e;
+        }
+    }
 
     @SuppressWarnings("unchecked")
     public List<Hotel> findHotelByName(String name){
 
-        List<Hotel> hotels;
-
         try( Session session = createSessionFactory().openSession()){
 
-            NativeQuery<Hotel> query = session.createNativeQuery(SQL_GET_HOTEL_BY_NAME).setParameter("idParam", name);
-            hotels = query.list();
+            Query query = session.createQuery(SQL_GET_HOTEL_BY_NAME).setParameter("nameParam", name);
+            List<Hotel> hotels = query.list();
 
-            //for (Hotel hotel : hotels){
-            //    Hibernate.initialize(hotel.getRooms());
-            //}
-            //hotels = session.get(Hotel.class, hotel.getId());
+            for (Hotel hotel : hotels){
+                System.out.println(hotel.getRooms());
+            }
 
-            //if (hotel != null){
-            //    Hibernate.initialize(hotel.getRooms());
-            //}
+            return query.list();
 
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
             throw e;
         }
-
-        return hotels;
     }
 
     @SuppressWarnings("unchecked")
-    public Hotel findHotelByCity(String city)throws BadRequestException{
+    public List<Hotel> findHotelByCity(String city){
 
-        Hotel hotel;
         try( Session session = createSessionFactory().openSession()){
 
             NativeQuery<Hotel> query = session.createNativeQuery(SQL_GET_HOTEL_BY_CITY).setParameter("idParam", city);
-            if (query.uniqueResult() != null){
-                hotel = query.addEntity(Hotel.class).uniqueResult();
-            }else
-                throw new BadRequestException("There is no hotel from city - " + city + " in the database");
+
+            return query.list();
 
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
             throw e;
         }
-
-        return hotel;
     }
 
     public void delete(long id)throws BadRequestException {
@@ -72,10 +82,16 @@ public class HotelDAO extends GeneralDAO<Hotel> {
             tr = session.getTransaction();
             tr.begin();
 
-            session.delete(findById(id));
+            if (findById(id) != null){
+                session.delete(findById(id));
 
-            System.out.println("Recording deleted successfully");
-            tr.commit();
+                System.out.println("Recording deleted successfully");
+
+                tr.commit();
+            }
+            else
+                throw new BadRequestException("Object with id " + id + " in the database not found.");
+
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
@@ -85,16 +101,14 @@ public class HotelDAO extends GeneralDAO<Hotel> {
     }
 
     @SuppressWarnings("unchecked")
-    public static Hotel findById(long id)throws BadRequestException{
+    public static Hotel findById(long id){
         Hotel hotel;
         try( Session session = createSessionFactory().openSession()){
 
             NativeQuery<Hotel> query = session.createNativeQuery(SQL_GET_HOTEL_BY_ID);
             query.setParameter("idParam", id);
-            if (query.uniqueResult() != null){
-                hotel = query.addEntity(Hotel.class).uniqueResult();
-            }else
-                throw new BadRequestException("There is no object with id - " + id + " in the database");
+
+            hotel = query.addEntity(Hotel.class).uniqueResult();
 
         }catch (HibernateException e){
             System.err.println("Save is failed");

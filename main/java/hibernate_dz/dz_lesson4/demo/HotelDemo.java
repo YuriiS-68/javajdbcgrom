@@ -2,12 +2,10 @@ package hibernate_dz.dz_lesson4.demo;
 
 import hibernate_dz.dz_lesson4.dao.GeneralDAO;
 import hibernate_dz.dz_lesson4.dao.HotelDAO;
-import hibernate_dz.dz_lesson4.exception.BadRequestException;
 import hibernate_dz.dz_lesson4.model.Hotel;
 
 public class HotelDemo {
-    public static void main(String[] args)throws BadRequestException {
-        GeneralDAO<Hotel> generalDAO = new GeneralDAO<>();
+    public static void main(String[] args){
 
         HotelDAO hotelDAO = new HotelDAO();
 
@@ -19,7 +17,10 @@ public class HotelDemo {
 
         //hotelDAO.delete(25);
 
-        System.out.println(hotelDAO.findHotelByName("SPUTNIK"));
+        //String res = hotelDAO.findHotelByName("SPUTNIK").toString();
+        //String csv = res.substring(1, res.length() - 1).replace(",", ",");
+
+        System.out.println(hotelDAO.findHotelByNameWithNative("SPUTNIK"));
 
         //System.out.println(hotelDAO.findHotelByCity("London"));
     }

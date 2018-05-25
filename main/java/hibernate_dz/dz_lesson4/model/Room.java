@@ -103,7 +103,7 @@ public class Room {
                 ", breakfastIncluded=" + breakfastIncluded +
                 ", petsAllowed=" + petsAllowed +
                 ", dateAvailableFrom=" + dateAvailableFrom +
-                ", hotel=" + hotel +
+                ", hotel=" + hotel.getId() +
                 '}';
     }
 }

@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "ORDER_")
+@Table(name = "ORDER_DZ4")
 public class Order {
 
     private long id;
@@ -38,13 +38,13 @@ public class Order {
         return id;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_USER")
     public User getUser() {
         return user;
     }
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_ROOM")
     public Room getRoom() {
         return room;
