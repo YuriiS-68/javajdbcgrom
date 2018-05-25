@@ -11,9 +11,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class UserDemo {
-    public static void main(String[] args)throws SQLException {
+    public static void main(String[] args){
 
-        GeneralDAO<User> generalDAO = new GeneralDAO<>();
+        final String SQL_GET_USER_BY_ID = "SELECT * FROM USER_DZ4 WHERE ID = :idParam";
+
+        GeneralDAO<User> userGeneralDAO = new GeneralDAO<>();
 
         UserDAO userDAO = new UserDAO();
 
@@ -49,7 +51,7 @@ public class UserDemo {
         //user5.setId(22);
         //generalDAO.update(user5);
 
-
+        System.out.println(userDAO);
 
 
     }

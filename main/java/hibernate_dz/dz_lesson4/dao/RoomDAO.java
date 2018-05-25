@@ -62,20 +62,18 @@ public class RoomDAO extends GeneralDAO<Room> {
 
     @SuppressWarnings("unchecked")
     public static Room findById(long id){
-        Room room;
+
         try( Session session = createSessionFactory().openSession()){
 
-            NativeQuery<Room> query = session.createNativeQuery(SQL_GET_ROOM_BY_ID);
-            query.setParameter("idParam", id);
+            NativeQuery<Room> query = session.createNativeQuery(SQL_GET_ROOM_BY_ID, Room.class).setParameter("idParam", id);
 
-            room = query.addEntity(Room.class).uniqueResult();
+            return query.uniqueResult();
 
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
             throw e;
         }
-        return room;
     }
 
     private static boolean filterCheck(Room room, Filter filter)throws Exception{

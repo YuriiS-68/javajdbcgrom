@@ -13,30 +13,8 @@ import java.util.List;
 public class HotelDAO extends GeneralDAO<Hotel> {
 
     private static final String SQL_GET_HOTEL_BY_ID = "SELECT * FROM HOTEL WHERE ID = :idParam";
-    private static final String SQL_GET_HOTEL_BY_NAME_NATIVE = "SELECT * FROM HOTEL WHERE NAME = :nameParam";
     private static final String SQL_GET_HOTEL_BY_CITY = "SELECT * FROM HOTEL WHERE CITY = :idParam";
     private static final String SQL_GET_HOTEL_BY_NAME = "FROM Hotel WHERE NAME = :nameParam";
-
-    @SuppressWarnings("unchecked")
-    public List<Hotel> findHotelByNameWithNative(String name){
-
-        try( Session session = createSessionFactory().openSession()){
-
-            NativeQuery<Hotel> query = session.createNativeQuery(SQL_GET_HOTEL_BY_NAME_NATIVE, Hotel.class).setParameter("nameParam", name);
-            List<Hotel> hotels = query.list();
-
-            for (Hotel hotel : hotels){
-                System.out.println(hotel.getRooms());
-            }
-
-            return query.list();
-
-        }catch (HibernateException e){
-            System.err.println("Save is failed");
-            System.err.println(e.getMessage());
-            throw e;
-        }
-    }
 
     @SuppressWarnings("unchecked")
     public List<Hotel> findHotelByName(String name){
@@ -44,11 +22,6 @@ public class HotelDAO extends GeneralDAO<Hotel> {
         try( Session session = createSessionFactory().openSession()){
 
             Query query = session.createQuery(SQL_GET_HOTEL_BY_NAME).setParameter("nameParam", name);
-            List<Hotel> hotels = query.list();
-
-            for (Hotel hotel : hotels){
-                System.out.println(hotel.getRooms());
-            }
 
             return query.list();
 
@@ -64,7 +37,7 @@ public class HotelDAO extends GeneralDAO<Hotel> {
 
         try( Session session = createSessionFactory().openSession()){
 
-            NativeQuery<Hotel> query = session.createNativeQuery(SQL_GET_HOTEL_BY_CITY).setParameter("idParam", city);
+            NativeQuery<Hotel> query = session.createNativeQuery(SQL_GET_HOTEL_BY_CITY, Hotel.class).setParameter("idParam", city);
 
             return query.list();
 
@@ -102,19 +75,17 @@ public class HotelDAO extends GeneralDAO<Hotel> {
 
     @SuppressWarnings("unchecked")
     public static Hotel findById(long id){
-        Hotel hotel;
+
         try( Session session = createSessionFactory().openSession()){
 
-            NativeQuery<Hotel> query = session.createNativeQuery(SQL_GET_HOTEL_BY_ID);
-            query.setParameter("idParam", id);
+            NativeQuery<Hotel> query = session.createNativeQuery(SQL_GET_HOTEL_BY_ID, Hotel.class).setParameter("idParam", id);
 
-            hotel = query.addEntity(Hotel.class).uniqueResult();
+            return query.uniqueResult();
 
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
             throw e;
         }
-        return hotel;
     }
 }

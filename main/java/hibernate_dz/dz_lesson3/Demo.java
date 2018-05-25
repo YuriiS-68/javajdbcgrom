@@ -3,10 +3,11 @@ package hibernate_dz.dz_lesson3;
 import java.util.Date;
 
 public class Demo {
-    public static void main(String[] args)throws Exception{
-         GeneralDAO<Hotel> generalDAO = new GeneralDAO<>();
+    public static void main(String[] args){
+         GeneralDAO<Hotel> hotelGeneralDAO = new GeneralDAO<>();
          GeneralDAO<Room> roomGeneralDAO = new GeneralDAO<>();
          RoomDAO roomDAO = new RoomDAO();
+         HotelDAO hotelDAO = new HotelDAO();
 
         Hotel hotel1 = new Hotel("NORD", "Ukraine", "Kiev", "Vokzalnaya");
         Hotel hotel2 = new Hotel(180, "Vostok777", "China", "Pekin", "Mao");
@@ -29,10 +30,16 @@ public class Demo {
         //generalDAO.update(hotel2);
         //roomGeneralDAO.update(room2);
 
-        roomGeneralDAO.save(room4);
+        //roomGeneralDAO.save(room4);
         //generalDAO.save(hotel3);
 
         //System.out.println(room1);
+
+        try {
+            hotelDAO.findById(29);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }

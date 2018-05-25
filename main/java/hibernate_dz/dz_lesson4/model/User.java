@@ -114,8 +114,7 @@ public class User {
                 ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 ", country='" + country + '\'' +
-                ", userType='" + userType + '\'' +
-                ", orders=" + orders +
+                ", userType='" + userType +
                 '}';
     }
 }

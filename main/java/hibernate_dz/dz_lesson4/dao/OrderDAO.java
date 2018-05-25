@@ -83,7 +83,7 @@ public class OrderDAO extends GeneralDAO<Order> {
         Date dateStart = GeneralDAO.getFORMAT().parse(dateFrom);
         Date dateFinish = GeneralDAO.getFORMAT().parse(dateTo);
 
-        order.setUser(UserDAO.findById(userId));
+        //order.setUser(UserDAO.findById(userId));
 
         order.setRoom(RoomDAO.findById(roomId));
 
@@ -107,8 +107,8 @@ public class OrderDAO extends GeneralDAO<Order> {
 
     private void validate(long roomId, long userId, long hotelId)throws BadRequestException{
 
-        if (UserDAO.findById(userId).getId() != userId)
-            throw new BadRequestException("There is no user with id in the database - " + userId);
+        //if (UserDAO.findById(userId).getId() != userId)
+         //   throw new BadRequestException("There is no user with id in the database - " + userId);
 
         if (RoomDAO.findById(roomId).getId() != roomId)
             throw new BadRequestException("There is no hotel with id in the database - " + hotelId);
@@ -119,19 +119,17 @@ public class OrderDAO extends GeneralDAO<Order> {
 
     @SuppressWarnings("unchecked")
     private static Order findById(long id){
-        Order order;
+
         try (Session session = createSessionFactory().openSession()) {
 
-            NativeQuery<Order> query = session.createNativeQuery(SQL_GET_ORDER_BY_ID);
-            query.setParameter("idParam", id);
+            NativeQuery<Order> query = session.createNativeQuery(SQL_GET_ORDER_BY_ID, Order.class).setParameter("idParam", id);
 
-            order = query.addEntity(Room.class).uniqueResult();
+            return query.uniqueResult();
 
         } catch (HibernateException e) {
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
             throw e;
         }
-        return order;
     }
 }

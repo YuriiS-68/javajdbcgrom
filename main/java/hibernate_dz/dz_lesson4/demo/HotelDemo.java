@@ -20,7 +20,7 @@ public class HotelDemo {
         //String res = hotelDAO.findHotelByName("SPUTNIK").toString();
         //String csv = res.substring(1, res.length() - 1).replace(",", ",");
 
-        System.out.println(hotelDAO.findHotelByNameWithNative("SPUTNIK"));
+        System.out.println(hotelDAO.findHotelByCity("Rome"));
 
         //System.out.println(hotelDAO.findHotelByCity("London"));
     }

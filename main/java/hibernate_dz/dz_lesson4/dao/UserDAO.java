@@ -1,16 +1,17 @@
 package hibernate_dz.dz_lesson4.dao;
 
 import hibernate_dz.dz_lesson4.exception.BadRequestException;
+import hibernate_dz.dz_lesson4.model.Hotel;
 import hibernate_dz.dz_lesson4.model.User;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 
 public class UserDAO extends GeneralDAO<User> {
 
-    private static final String SQL_GET_USER_BY_ID = "SELECT * FROM USER_ WHERE ID = :idParam";
-    private static final String SQL_FIND_BY_ID = "SELECT * FROM USER_ WHERE ID = ?";
+    private static final String SQL_GET_USER_BY_ID = "SELECT * FROM USER_DZ4 WHERE ID = :idParam";
 
     public User registerUser(User user)throws BadRequestException{
 
@@ -30,8 +31,8 @@ public class UserDAO extends GeneralDAO<User> {
             tr = session.getTransaction();
             tr.begin();
 
-            if (findById(id) != null){
-                session.delete(findById(id));
+            if (findById(id, SQL_GET_USER_BY_ID) != null){
+                session.delete(findById(id, SQL_GET_USER_BY_ID));
 
                 System.out.println("Recording deleted successfully");
 
@@ -48,21 +49,24 @@ public class UserDAO extends GeneralDAO<User> {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    /*public User findById(long id){
+
+        return findById(id, SQL_GET_USER_BY_ID);
+    }*/
+
+    /*@SuppressWarnings("unchecked")
     public static User findById(long id){
-        User user;
+
         try( Session session = createSessionFactory().openSession()){
 
-            NativeQuery<User> query = session.createNativeQuery(SQL_GET_USER_BY_ID);
-            query.setParameter("idParam", id);
+            NativeQuery<User> query = session.createNativeQuery(SQL_GET_USER_BY_ID, User.class).setParameter("idParam", id);
 
-            user = query.addEntity(User.class).uniqueResult();
+            return query.uniqueResult();
 
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
             throw e;
         }
-        return user;
-    }
+    }*/
 }

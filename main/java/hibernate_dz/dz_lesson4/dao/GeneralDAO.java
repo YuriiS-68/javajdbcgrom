@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
 import java.sql.*;
@@ -61,41 +62,21 @@ public class GeneralDAO<T> {
         }
     }
 
-    /*public T findById(long id, String sql, Connection connection)throws SQLException{
+    @SuppressWarnings("unchecked")
+    public T findById(long id, String sql){
 
-        T t = null;
+        try( Session session = createSessionFactory().openSession()){
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-            connection.setAutoCommit(false);
+            NativeQuery<T> query = session.createNativeQuery(sql, T).setParameter("idParam", id);
 
-            preparedStatement.setLong(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            return  ( T )query.uniqueResult();
 
-            int count = resultSet.getMetaData().getColumnCount();
-
-            if (count == 5){
-                while (resultSet.next()){
-                    t =
-                }
-            }
-
-
-
-            connection.commit();
-        }catch (SQLException e){
-            connection.rollback();
+        }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
             throw e;
-        }finally {
-            if (connection != null){
-                connection.setAutoCommit(true);
-                connection.close();
-            }
         }
-
-        return t;
-    }*/
+    }
 
     public static Connection getConnection()throws SQLException {
         return DriverManager.getConnection(DB_URL, USER, PASS);
@@ -112,25 +93,3 @@ public class GeneralDAO<T> {
         return FORMAT;
     }
 }
-
-    /*@SuppressWarnings("unchecked")
-    public T findById(long id, String sql)throws BadRequestException{
-
-        T t;
-
-        try( Session session = createSessionFactory().openSession()){
-
-            Query query = session.createQuery(sql);
-            query.setParameter("idParam", id);
-            if (query.uniqueResult() != null){
-                t = ( T )query.uniqueResult();
-            }else
-                throw new BadRequestException("There is no object with id - " + id + " in the database");
-
-        }catch (HibernateException e){
-            System.err.println("Save is failed");
-            System.err.println(e.getMessage());
-            throw e;
-        }
-        return t;
-    }*/
