@@ -3,10 +3,8 @@ package hibernate_dz.dz_lesson4.dao;
 import hibernate_dz.dz_lesson4.exception.BadRequestException;
 import hibernate_dz.dz_lesson4.model.Filter;
 import hibernate_dz.dz_lesson4.model.Room;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.NativeQuery;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -37,43 +35,16 @@ public class RoomDAO extends GeneralDAO<Room> {
 
     public void delete(long id)throws BadRequestException{
 
-        Transaction tr = null;
-        try (Session session = createSessionFactory().openSession()){
-            tr = session.getTransaction();
-            tr.begin();
+        setType(Room.class);
 
-            if (findById(id) != null){
-                session.delete(findById(id));
-
-                System.out.println("Recording deleted successfully");
-
-                tr.commit();
-            }
-            else
-                throw new BadRequestException("Object with id " + id + " in the database not found.");
-
-        }catch (HibernateException e){
-            System.err.println("Save is failed");
-            System.err.println(e.getMessage());
-            if (tr != null)
-                tr.rollback();
-        }
+        delete(id, SQL_GET_ROOM_BY_ID);
     }
 
-    @SuppressWarnings("unchecked")
-    public static Room findById(long id){
+    public Room findById(long id){
 
-        try( Session session = createSessionFactory().openSession()){
+        setType(Room.class);
 
-            NativeQuery<Room> query = session.createNativeQuery(SQL_GET_ROOM_BY_ID, Room.class).setParameter("idParam", id);
-
-            return query.uniqueResult();
-
-        }catch (HibernateException e){
-            System.err.println("Save is failed");
-            System.err.println(e.getMessage());
-            throw e;
-        }
+        return findById(id, SQL_GET_ROOM_BY_ID);
     }
 
     private static boolean filterCheck(Room room, Filter filter)throws Exception{

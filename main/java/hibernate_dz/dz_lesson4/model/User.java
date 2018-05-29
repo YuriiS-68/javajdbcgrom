@@ -6,8 +6,8 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "USER_DZ4")
-public class User {
-    private long id;
+public class User extends IdEntity{
+    private Long id;
     private String userName;
     private String password;
     private String country;
@@ -36,7 +36,7 @@ public class User {
     @SequenceGenerator(name = "US_SQ", sequenceName = "USER_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "US_SQ")
     @Column(name = "ID")
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -65,7 +65,7 @@ public class User {
         return orders;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -94,9 +94,8 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id &&
+        return Objects.equals(id, user.id) &&
                 Objects.equals(userName, user.userName) &&
-                Objects.equals(password, user.password) &&
                 Objects.equals(country, user.country) &&
                 Objects.equals(userType, user.userType);
     }
@@ -104,7 +103,7 @@ public class User {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, userName, password, country, userType);
+        return Objects.hash(id, userName, country, userType);
     }
 
     @Override

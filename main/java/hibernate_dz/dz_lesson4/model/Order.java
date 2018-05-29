@@ -6,9 +6,9 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "ORDER_DZ4")
-public class Order {
+public class Order extends IdEntity {
 
-    private long id;
+    private Long id;
     private User user;
     private Room room;
     private Date dateFrom;
@@ -34,7 +34,7 @@ public class Order {
     @SequenceGenerator(name = "ORDER_SQ", sequenceName = "ORDER_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ORDER_SQ")
     @Column(name = "ID")
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -67,7 +67,7 @@ public class Order {
         return moneyPaid;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -96,8 +96,8 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return id == order.id &&
-                Double.compare(order.moneyPaid, moneyPaid) == 0 &&
+        return Double.compare(order.moneyPaid, moneyPaid) == 0 &&
+                Objects.equals(id, order.id) &&
                 Objects.equals(user, order.user) &&
                 Objects.equals(room, order.room) &&
                 Objects.equals(dateFrom, order.dateFrom) &&

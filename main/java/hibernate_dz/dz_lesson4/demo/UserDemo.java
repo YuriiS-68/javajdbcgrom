@@ -6,14 +6,11 @@ import hibernate_dz.dz_lesson4.exception.BadRequestException;
 import hibernate_dz.dz_lesson4.model.Order;
 import hibernate_dz.dz_lesson4.model.User;
 
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
 public class UserDemo {
-    public static void main(String[] args){
-
-        final String SQL_GET_USER_BY_ID = "SELECT * FROM USER_DZ4 WHERE ID = :idParam";
+    public static void main(String[] args)throws BadRequestException{
 
         GeneralDAO<User> userGeneralDAO = new GeneralDAO<>();
 
@@ -51,7 +48,13 @@ public class UserDemo {
         //user5.setId(22);
         //generalDAO.update(user5);
 
-        System.out.println(userDAO);
+        userDAO.delete(32L);
+
+        //user6.setId(32L);
+        //user6.setCountry("USA");
+        //user6.setUserType("ADMIN");
+        //userGeneralDAO.update(user6);
+
 
 
     }

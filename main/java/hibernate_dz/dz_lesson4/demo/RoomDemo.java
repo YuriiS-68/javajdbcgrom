@@ -26,9 +26,9 @@ public class RoomDemo {
         Hotel hotel2 = new Hotel("SPUTNIK", "Ukraine", "Kiev", "Vasilkovskaya");
         Hotel hotel3 = new Hotel("SPORT", "Italy", "Rome", "street 23");
 
-        hotel1.setId(29);
-        hotel2.setId(28);
-        hotel3.setId(30);
+        hotel1.setId(29L);
+        hotel2.setId(28L);
+        hotel3.setId(30L);
         Room room1 = new Room(2, 50.0, 1, 0, format.parse(date4), hotel1);
         Room room2 = new Room(4, 180.0, 1, 1, format.parse(date2), hotel1);
         Room room3 = new Room(1, 50.0, 0, 1, format.parse(date3), hotel3);
@@ -41,7 +41,7 @@ public class RoomDemo {
 
         //System.out.println(roomDAO.findRooms(filter1));
 
-        room5.setId(26);
+        room5.setId(26L);
         generalDAO.save(room5);
         //generalDAO.save(room3);
 

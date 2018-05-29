@@ -35,11 +35,11 @@ public class Demo {
 
         //System.out.println(room1);
 
-        try {
+        /*try {
             hotelDAO.findById(29);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 }

@@ -4,7 +4,6 @@ import hibernate_dz.dz_lesson4.exception.BadRequestException;
 import hibernate_dz.dz_lesson4.model.Hotel;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
@@ -50,42 +49,15 @@ public class HotelDAO extends GeneralDAO<Hotel> {
 
     public void delete(long id)throws BadRequestException {
 
-        Transaction tr = null;
-        try (Session session = createSessionFactory().openSession()){
-            tr = session.getTransaction();
-            tr.begin();
+        setType(Hotel.class);
 
-            if (findById(id) != null){
-                session.delete(findById(id));
-
-                System.out.println("Recording deleted successfully");
-
-                tr.commit();
-            }
-            else
-                throw new BadRequestException("Object with id " + id + " in the database not found.");
-
-        }catch (HibernateException e){
-            System.err.println("Save is failed");
-            System.err.println(e.getMessage());
-            if (tr != null)
-                tr.rollback();
-        }
+        delete(id, SQL_GET_HOTEL_BY_ID);
     }
 
-    @SuppressWarnings("unchecked")
-    public static Hotel findById(long id){
+    public Hotel findById(long id){
 
-        try( Session session = createSessionFactory().openSession()){
+        setType(Hotel.class);
 
-            NativeQuery<Hotel> query = session.createNativeQuery(SQL_GET_HOTEL_BY_ID, Hotel.class).setParameter("idParam", id);
-
-            return query.uniqueResult();
-
-        }catch (HibernateException e){
-            System.err.println("Save is failed");
-            System.err.println(e.getMessage());
-            throw e;
-        }
+        return findById(id, SQL_GET_HOTEL_BY_ID);
     }
 }

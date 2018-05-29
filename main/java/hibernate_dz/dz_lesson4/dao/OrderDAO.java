@@ -2,18 +2,20 @@ package hibernate_dz.dz_lesson4.dao;
 
 import hibernate_dz.dz_lesson4.exception.BadRequestException;
 import hibernate_dz.dz_lesson4.model.Order;
-import hibernate_dz.dz_lesson4.model.Room;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
 import java.util.Date;
 
 public class OrderDAO extends GeneralDAO<Order> {
 
-    private static final String SQL_GET_ORDER_BY_ID = "SELECT * FROM ORDER_";
+    private UserDAO userDAO = new UserDAO();
+    private HotelDAO hotelDAO = new HotelDAO();
+    private RoomDAO roomDAO = new RoomDAO();
+
+    private static final String SQL_GET_ORDER_BY_ID = "SELECT * FROM ORDER_DZ4 WHERE ID = :idParam";
 
     public void bookRoom(long roomId, long userId, long hotelId)throws Exception{
         //проверить есть ли объекты с такими id в базе данных
@@ -49,27 +51,9 @@ public class OrderDAO extends GeneralDAO<Order> {
 
     public void delete(long id)throws BadRequestException{
 
-        Transaction tr = null;
-        try (Session session = createSessionFactory().openSession()){
-            tr = session.getTransaction();
-            tr.begin();
+        setType(Order.class);
 
-            if (findById(id) != null){
-                session.delete(findById(id));
-
-                System.out.println("Recording deleted successfully");
-
-                tr.commit();
-            }
-            else
-                throw new BadRequestException("Object with id " + id + " in the database not found.");
-
-        }catch (HibernateException e){
-            System.err.println("Save is failed");
-            System.err.println(e.getMessage());
-            if (tr != null)
-                tr.rollback();
-        }
+        delete(id, SQL_GET_ORDER_BY_ID);
     }
 
     private Order createOrder(long roomId, long userId)throws Exception{
@@ -83,9 +67,9 @@ public class OrderDAO extends GeneralDAO<Order> {
         Date dateStart = GeneralDAO.getFORMAT().parse(dateFrom);
         Date dateFinish = GeneralDAO.getFORMAT().parse(dateTo);
 
-        //order.setUser(UserDAO.findById(userId));
+        order.setUser(userDAO.findById(userId));
 
-        order.setRoom(RoomDAO.findById(roomId));
+        order.setRoom(roomDAO.findById(roomId));
 
         order.setDateFrom(GeneralDAO.getFORMAT().parse(dateFrom));
         order.setDateTo(GeneralDAO.getFORMAT().parse(dateTo));
@@ -95,41 +79,32 @@ public class OrderDAO extends GeneralDAO<Order> {
         return order;
     }
 
-    private static double orderCost(Date dateStart, Date dateFinish, long roomId)throws Exception{
+    private double orderCost(Date dateStart, Date dateFinish, long roomId)throws Exception{
         if (dateStart == null || dateFinish == null || roomId == 0)
             throw new BadRequestException("Invalid incoming data");
 
         long difference = dateStart.getTime() - dateFinish.getTime();
         int days = (int)(difference / (24 * 60 * 60 * 1000));
 
-        return days * RoomDAO.findById(roomId).getPrice();
+        return days * roomDAO.findById(roomId).getPrice();
     }
 
     private void validate(long roomId, long userId, long hotelId)throws BadRequestException{
 
-        //if (UserDAO.findById(userId).getId() != userId)
-         //   throw new BadRequestException("There is no user with id in the database - " + userId);
+        if (userDAO.findById(userId).getId() != userId)
+            throw new BadRequestException("There is no user with id in the database - " + userId);
 
-        if (RoomDAO.findById(roomId).getId() != roomId)
+        if (hotelDAO.findById(hotelId).getId() != hotelId)
             throw new BadRequestException("There is no hotel with id in the database - " + hotelId);
 
-        if (HotelDAO.findById(roomId).getId() != hotelId)
-            throw new BadRequestException("There is no hotel with id in the database - " + hotelId);
+        if (roomDAO.findById(roomId).getId() != hotelId)
+            throw new BadRequestException("There is no room with id in the database - " + roomId);
     }
 
-    @SuppressWarnings("unchecked")
-    private static Order findById(long id){
+    private Order findById(long id){
 
-        try (Session session = createSessionFactory().openSession()) {
+        setType(Order.class);
 
-            NativeQuery<Order> query = session.createNativeQuery(SQL_GET_ORDER_BY_ID, Order.class).setParameter("idParam", id);
-
-            return query.uniqueResult();
-
-        } catch (HibernateException e) {
-            System.err.println("Save is failed");
-            System.err.println(e.getMessage());
-            throw e;
-        }
+        return findById(id, SQL_GET_ORDER_BY_ID);
     }
 }

@@ -1,38 +1,39 @@
 package hibernate_dz.dz_lesson4.dao;
 
 import hibernate_dz.dz_lesson4.exception.BadRequestException;
+import hibernate_dz.dz_lesson4.model.IdEntity;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
 
-import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-public class GeneralDAO<T> {
+public class GeneralDAO<T extends IdEntity> {
 
     private static final DateFormat FORMAT = new SimpleDateFormat("dd.MM.yyyy");
     private static SessionFactory sessionFactory;
+    private Class<T> type;
 
-    private static final String DB_URL = "jdbc:oracle:thin:@gromcode-lesson.cjqbbseqr63c.eu-central-1.rds.amazonaws.com:1521:ORCL";
-    private static final String USER = "main";
-    private static final String PASS = "ifgjrkzr";
-
-    public T save(T t){
+    public T  save(T t)throws BadRequestException{
 
         Transaction tr = null;
         try(Session session = createSessionFactory().openSession()){
             tr = session.getTransaction();
             tr.begin();
 
-            session.save(t);
+            if (t.getId() == null){
+                session.save(t);
 
-            tr.commit();
-            System.out.println("Save is done");
+                tr.commit();
+                System.out.println("Save is done");
+            }
+            else
+                throw new BadRequestException("User with id -  " + t.getId() + " can`t be registered in the database");
+
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
@@ -42,18 +43,48 @@ public class GeneralDAO<T> {
         return t;
     }
 
-    public void update(T t){
+    public void update(T t)throws BadRequestException{
 
         Transaction tr = null;
         try (Session session = createSessionFactory().openSession()){
             tr = session.getTransaction();
             tr.begin();
 
-            session.update(t);
+            if (t.getId() != null){
 
-            System.out.println("Update was successful");
+                session.update(t);
 
-            tr.commit();
+                tr.commit();
+                System.out.println("Update was successful");
+            }
+            else
+                throw new BadRequestException("User with id -  " + t.getId() + " can`t be registered in the database");
+
+        }catch (HibernateException e){
+            System.err.println("Save is failed");
+            System.err.println(e.getMessage());
+            if (tr != null)
+                tr.rollback();
+        }
+    }
+
+    public void delete(long id, String sql)throws BadRequestException {
+
+        Transaction tr = null;
+        try (Session session = createSessionFactory().openSession()){
+            tr = session.getTransaction();
+            tr.begin();
+
+            if (findById(id, sql) != null){
+                session.delete(findById(id, sql));
+
+                System.out.println("Recording deleted successfully");
+
+                tr.commit();
+            }
+            else
+                throw new BadRequestException("Object with id " + id + " in the database not found.");
+
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
@@ -67,19 +98,14 @@ public class GeneralDAO<T> {
 
         try( Session session = createSessionFactory().openSession()){
 
-            NativeQuery<T> query = session.createNativeQuery(sql, T).setParameter("idParam", id);
+            NativeQuery<T> query = session.createNativeQuery(sql, type).setParameter("idParam", id);
 
-            return  ( T )query.uniqueResult();
-
+            return query.uniqueResult();
         }catch (HibernateException e){
             System.err.println("Save is failed");
             System.err.println(e.getMessage());
             throw e;
         }
-    }
-
-    public static Connection getConnection()throws SQLException {
-        return DriverManager.getConnection(DB_URL, USER, PASS);
     }
 
     public static SessionFactory createSessionFactory(){
@@ -89,7 +115,11 @@ public class GeneralDAO<T> {
         return sessionFactory;
     }
 
-    public static DateFormat getFORMAT() {
+    static DateFormat getFORMAT() {
         return FORMAT;
+    }
+
+    public void setType(Class<T> type) {
+        this.type = type;
     }
 }

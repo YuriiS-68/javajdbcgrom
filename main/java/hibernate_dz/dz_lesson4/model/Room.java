@@ -2,11 +2,12 @@ package hibernate_dz.dz_lesson4.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "ROOM")
-public class Room {
-    private long id;
+public class Room extends IdEntity {
+    private Long id;
     private int numberOfGuests;
     private double price;
     private int breakfastIncluded;
@@ -30,7 +31,7 @@ public class Room {
     @SequenceGenerator(name = "RM_SQ", sequenceName = "ROOM_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RM_SQ")
     @Column(name = "ID")
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -66,7 +67,7 @@ public class Room {
         return hotel;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -92,6 +93,26 @@ public class Room {
 
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Room room = (Room) o;
+        return numberOfGuests == room.numberOfGuests &&
+                Double.compare(room.price, price) == 0 &&
+                breakfastIncluded == room.breakfastIncluded &&
+                petsAllowed == room.petsAllowed &&
+                Objects.equals(id, room.id) &&
+                Objects.equals(dateAvailableFrom, room.dateAvailableFrom) &&
+                Objects.equals(hotel, room.hotel);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, numberOfGuests, price, breakfastIncluded, petsAllowed, dateAvailableFrom, hotel);
     }
 
     @Override

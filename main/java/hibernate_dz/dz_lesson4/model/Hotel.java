@@ -2,11 +2,12 @@ package hibernate_dz.dz_lesson4.model;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "HOTEL")
-public class Hotel {
-    private long id;
+public class Hotel extends IdEntity {
+    private Long id;
     private String name;
     private String country;
     private String city;
@@ -35,7 +36,7 @@ public class Hotel {
     @SequenceGenerator(name = "HT_SQ", sequenceName = "HOTEL_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "HT_SQ")
     @Column(name = "ID")
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -64,7 +65,7 @@ public class Hotel {
         return rooms;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -86,6 +87,24 @@ public class Hotel {
 
     public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Hotel hotel = (Hotel) o;
+        return Objects.equals(id, hotel.id) &&
+                Objects.equals(name, hotel.name) &&
+                Objects.equals(country, hotel.country) &&
+                Objects.equals(city, hotel.city) &&
+                Objects.equals(street, hotel.street);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, name, country, city, street);
     }
 
     @Override
