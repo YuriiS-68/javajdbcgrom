@@ -37,15 +37,19 @@ public class RoomDemo {
 
         Filter filter = new Filter(0, 50.0, 1, 0, format.parse(date4), "England", "London");
         Filter filter1 = new Filter(50.0, "England");
-        Filter filter2 = new Filter(50.0);
+        Filter filter2 = new Filter(175.0, 1, 1);
 
         //System.out.println(roomDAO.findRooms(filter1));
 
-        room5.setId(26L);
-        generalDAO.save(room5);
+        //room5.setId(26L);
+        //generalDAO.save(room5);
         //generalDAO.save(room3);
 
         //roomDAO.delete(25);
         //roomDAO.delete(20);
+
+        roomDAO.findRooms(filter2);
+
+        //System.out.println(roomDAO.createQuery(filter2));
     }
 }

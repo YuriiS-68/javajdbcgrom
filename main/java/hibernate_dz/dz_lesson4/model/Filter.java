@@ -25,6 +25,12 @@ public class Filter {
         this.city = city;
     }
 
+    public Filter(double price, int breakfastIncluded, int petsAllowed) {
+        this.price = price;
+        this.breakfastIncluded = breakfastIncluded;
+        this.petsAllowed = petsAllowed;
+    }
+
     public Filter(double price, String country){
         this.price = price;
         this.country = country;
