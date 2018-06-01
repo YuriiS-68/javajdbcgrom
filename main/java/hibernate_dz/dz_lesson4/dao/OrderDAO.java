@@ -17,7 +17,7 @@ public class OrderDAO extends GeneralDAO<Order> {
 
     private static final String SQL_GET_ORDER_BY_ID = "SELECT * FROM ORDER_DZ4 WHERE ID = :idParam";
 
-    public void bookRoom(long roomId, long userId, long hotelId)throws Exception{
+    public void bookRoom(Long roomId, Long userId, Long hotelId)throws Exception{
         //проверить есть ли объекты с такими id в базе данных
         //если есть создать ордер
         //сохранить ордер в базе
@@ -27,7 +27,7 @@ public class OrderDAO extends GeneralDAO<Order> {
     }
 
     @SuppressWarnings("unchecked")
-    public void cancelReservation(long roomId, long userId){
+    public void cancelReservation(Long roomId, Long userId){
 
         Transaction tr = null;
         try(Session session = createSessionFactory().openSession()){
@@ -56,7 +56,7 @@ public class OrderDAO extends GeneralDAO<Order> {
         delete(id, SQL_GET_ORDER_BY_ID);
     }
 
-    private Order createOrder(long roomId, long userId)throws Exception{
+    private Order createOrder(Long roomId, Long userId)throws Exception{
         if (roomId == 0 || userId == 0)
             throw new BadRequestException("Invalid incoming data");
 
@@ -79,7 +79,7 @@ public class OrderDAO extends GeneralDAO<Order> {
         return order;
     }
 
-    private double orderCost(Date dateStart, Date dateFinish, long roomId)throws Exception{
+    private double orderCost(Date dateStart, Date dateFinish, Long roomId)throws Exception{
         if (dateStart == null || dateFinish == null || roomId == 0)
             throw new BadRequestException("Invalid incoming data");
 
