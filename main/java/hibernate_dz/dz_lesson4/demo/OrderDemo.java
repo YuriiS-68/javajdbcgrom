@@ -37,6 +37,6 @@ public class OrderDemo {
         room1.setId(22L);
         //Order order1 = new Order(user1, room1, format.parse(dateFrom), format.parse(dateTo), 200.00);
 
-        orderDAO.bookRoom(22, 23, 29);
+        orderDAO.bookRoom(22L, 23L, 29L);
     }
 }

@@ -33,7 +33,7 @@ public class Order extends IdEntity {
     @Id
     @SequenceGenerator(name = "ORDER_SQ", sequenceName = "ORDER_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ORDER_SQ")
-    @Column(name = "ID")
+    @Column(name = "ID_O")
     public Long getId() {
         return id;
     }

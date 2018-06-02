@@ -31,9 +31,11 @@ public class Filter {
         this.petsAllowed = petsAllowed;
     }
 
-    public Filter(double price, String country){
+    public Filter(double price, String country, int breakfastIncluded, int petsAllowed){
         this.price = price;
         this.country = country;
+        this.breakfastIncluded = breakfastIncluded;
+        this.petsAllowed = petsAllowed;
     }
 
     public Filter(double price){

@@ -30,7 +30,7 @@ public class Room extends IdEntity {
     @Id
     @SequenceGenerator(name = "RM_SQ", sequenceName = "ROOM_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RM_SQ")
-    @Column(name = "ID")
+    @Column(name = "ID_R")
     public Long getId() {
         return id;
     }

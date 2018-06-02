@@ -35,7 +35,7 @@ public class Hotel extends IdEntity {
     @Id
     @SequenceGenerator(name = "HT_SQ", sequenceName = "HOTEL_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "HT_SQ")
-    @Column(name = "ID")
+    @Column(name = "ID_H")
     public Long getId() {
         return id;
     }
