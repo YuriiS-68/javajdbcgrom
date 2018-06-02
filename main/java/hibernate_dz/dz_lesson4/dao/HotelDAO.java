@@ -11,7 +11,7 @@ import java.util.List;
 
 public class HotelDAO extends GeneralDAO<Hotel> {
 
-    private static final String SQL_GET_HOTEL_BY_ID = "SELECT * FROM HOTEL WHERE ID = :idParam";
+    private static final String SQL_GET_HOTEL_BY_ID = "SELECT * FROM HOTEL WHERE ID_H = :idParam";
     private static final String SQL_GET_HOTEL_BY_CITY = "SELECT * FROM HOTEL WHERE CITY = :idParam";
     private static final String SQL_GET_HOTEL_BY_NAME = "FROM Hotel WHERE NAME = :nameParam";
 

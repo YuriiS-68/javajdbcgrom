@@ -15,7 +15,8 @@ public class OrderDAO extends GeneralDAO<Order> {
     private HotelDAO hotelDAO = new HotelDAO();
     private RoomDAO roomDAO = new RoomDAO();
 
-    private static final String SQL_GET_ORDER_BY_ID = "SELECT * FROM ORDER_DZ4 WHERE ID = :idParam";
+    private static final String SQL_GET_ORDER_BY_ID = "SELECT * FROM ORDER_DZ4 WHERE ID_O = :idParam";
+    private static final String SQL_DELETE_ORDER = "DELETE FROM Order_ WHERE ID_USER = :idParam AND ID_ROOM = :idParam";
 
     public void bookRoom(Long roomId, Long userId, Long hotelId)throws Exception{
         //проверить есть ли объекты с такими id в базе данных
@@ -34,7 +35,7 @@ public class OrderDAO extends GeneralDAO<Order> {
             tr = session.getTransaction();
             tr.begin();
 
-            Query<Order> query = session.createQuery("DELETE FROM Order_ WHERE ID_USER = :idParam AND ID_ROOM = :idParam");
+            Query<Order> query = session.createQuery(SQL_DELETE_ORDER);
             query.setParameter("idParam", userId).setParameter("idParam", roomId);
             query.executeUpdate();
 
@@ -83,7 +84,7 @@ public class OrderDAO extends GeneralDAO<Order> {
         if (dateStart == null || dateFinish == null || roomId == 0)
             throw new BadRequestException("Invalid incoming data");
 
-        long difference = dateStart.getTime() - dateFinish.getTime();
+        long difference = dateFinish.getTime() - dateStart.getTime();
         int days = (int)(difference / (24 * 60 * 60 * 1000));
 
         return days * roomDAO.findById(roomId).getPrice();

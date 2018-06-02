@@ -5,15 +5,13 @@ import hibernate_dz.dz_lesson4.model.Filter;
 import hibernate_dz.dz_lesson4.model.Room;
 import org.hibernate.Session;
 import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
 
 import java.util.List;
 
 public class RoomDAO extends GeneralDAO<Room> {
 
-    private static final String SQL_GET_ROOM_BY_ID = "SELECT * FROM ROOM WHERE ID = :idParam";
+    private static final String SQL_GET_ROOM_BY_ID = "SELECT * FROM ROOM WHERE ID_R = :idParam";
     private static final String NATIVE_SQL_GET_ROOMS_BY_FILTER = "SELECT * FROM ROOM, HOTEL WHERE ID_H = ID_HOTEL AND BREAKFAST_INCLUDED = :brParam AND PETS_ALLOWED = :petParam";
-    //private static final String SQL_GET_ROOMS_BY_FILTER = "FROM Room, Hotel WHERE Hotel.id = Room.id_hotel AND BREAKFAST_INCLUDED = :brParam AND PETS_ALLOWED = :petParam";
 
 
     @SuppressWarnings("unchecked")
